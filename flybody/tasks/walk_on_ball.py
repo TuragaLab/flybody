@@ -69,11 +69,11 @@ class WalkOnBall(Walking):
     """Returns factorized reward terms."""
     
     ball_qvel = physics.named.data.qvel['ball']
-    target_ball_qvel = [0., -2, 0]
+    target_ball_qvel = [0., -5, 0]
     qvel = rewards.tolerance(ball_qvel - target_ball_qvel,
                              bounds=(0, 0),
                              sigmoid='linear',
-                             margin=2.5,
+                             margin=6,
                              value_at_margin=0.0)
     return np.hstack(qvel)
 

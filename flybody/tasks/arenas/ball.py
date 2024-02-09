@@ -28,13 +28,12 @@ class BallFloor(composer.Arena):
             name='groundplane',
             width=200,
             height=200,
-            mark='edge',
-            markrgb=[1., 1., 1.],)
+            )
         self._ground_material = self._mjcf_root.asset.add(
             'material',
             name='groundplane',
-            texrepeat=[2, 2],  # Makes white squares exactly 1x1 length units.
-            texuniform=True,
+            texrepeat=[2, 2],
+            texuniform=False,
             reflectance=reflectance,
             texture=self._ground_texture,)
         if skybox:
