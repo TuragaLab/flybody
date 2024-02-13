@@ -50,13 +50,13 @@ def make_ghost_fly(walker, visible=True, visible_legs=True):
       geom.remove()
 
 
-def retract_wings(physics: 'mjcf.Physics', prefix: str = 'walker',
+def retract_wings(physics: 'mjcf.Physics', prefix: str = 'walker/',
                   roll=0.7, pitch=-1.0, yaw=1.5) -> None:
   """Set wing qpos to default retracted position."""
   for side in ['left', 'right']:
-    physics.named.data.qpos[f'{prefix}/wing_roll_{side}'] = roll
-    physics.named.data.qpos[f'{prefix}/wing_pitch_{side}'] = pitch
-    physics.named.data.qpos[f'{prefix}/wing_yaw_{side}'] = yaw
+    physics.named.data.qpos[f'{prefix}wing_roll_{side}'] = roll
+    physics.named.data.qpos[f'{prefix}wing_pitch_{side}'] = pitch
+    physics.named.data.qpos[f'{prefix}wing_yaw_{side}'] = yaw
 
 
 def add_trajectory_sites(root_entity, n_traj_sites, group=4):
