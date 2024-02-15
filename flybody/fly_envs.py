@@ -100,9 +100,12 @@ def walk_on_ball(random_state:np.random.RandomState = None):
   """
   # Build a fruitfly walker and arena.
   walker = fruitfly.FruitFly
-  arena = BallFloor(ball_pos=(0, 0, -1), skybox=True)
+  arena = BallFloor(ball_pos=(-0.05, 0, -0.419),
+                    ball_radius=0.454, 
+                    ball_density=0.0025,
+                    skybox=False)
   # Build a task that rewards the agent for tracking a walking ghost.
-  time_limit = 5.
+  time_limit = 2.
   task = WalkOnBall(walker=walker,
                        arena=arena,
                        joint_filter=0.01,
