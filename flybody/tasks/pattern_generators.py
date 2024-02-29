@@ -31,8 +31,8 @@ class WingBeatPatternGenerator():
 
     Args:
       base_pattern_path: Path to one cycle of 'base' wing kinematic data,
-        a np.array of shape (timesteps, 3). The sampling frequency does not
-        have to match dt_ctrl.
+        a np.array of shape (timesteps, 3). The order of wing joints is
+        yaw, roll, pitch. Sampling frequency does not have to match dt_ctrl.
       base_beat_freq: Mean beat frequency for the requested range of
         frequencies, Hz.
       rel_freq_range: Relative frequency range. For example, 0.1 means
@@ -51,7 +51,7 @@ class WingBeatPatternGenerator():
     """
     # Load base pattern for WBPG, shape (timesteps, 3).
     with open(base_pattern_path, 'rb') as f:
-      base_pattern = np.loadtxt(f)
+      base_pattern = np.load(f)
     base_pattern = np.tile(base_pattern, (1, 2))  # Duplicate for two wings.
 
     self.base_beat_freq = base_beat_freq
