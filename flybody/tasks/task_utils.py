@@ -2,7 +2,6 @@
 
 from typing import Sequence
 import numpy as np
-from dm_control.utils.transformations import quat_mul, quat_inv
 
 from flybody.quaternions import rotate_vec_with_quat
 
