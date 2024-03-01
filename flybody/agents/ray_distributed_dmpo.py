@@ -28,28 +28,28 @@ from flybody.agents.actors import DelayedFeedForwardActor
 
 @dataclasses.dataclass
 class DMPOConfig:
-    num_actors: int = 1
+    num_actors: int = 32
     batch_size: int = 256
     prefetch_size: int = 4
-    min_replay_size: int = 1_000
-    max_replay_size: int = 1_000_000
-    samples_per_insert: float = 32.0
+    min_replay_size: int = 10_000
+    max_replay_size: int = 4_000_000
+    samples_per_insert: float = 32.  # None: limiter = reverb.rate_limiters.MinSize()
     n_step: int = 5
     num_samples: int = 20
-    num_learner_steps: int = 1000
+    num_learner_steps: int = 100
     clipping: bool = True
     discount: float = 0.99
     policy_loss_module: Optional[snt.Module] = None
     policy_optimizer: Optional[snt.Optimizer] = None
     critic_optimizer: Optional[snt.Optimizer] = None
     dual_optimizer: Optional[snt.Optimizer] = None
-    target_policy_update_period: int = 100
-    target_critic_update_period: int = 100
+    target_policy_update_period: int = 101
+    target_critic_update_period: int = 107
     actor_update_period: int = 1000
     log_every: float = 60.  # Seconds.
     logger_save_csv_data: bool = False
-    checkpoint_to_load: Optional[str] = None
-    checkpoint_max_to_keep: Optional[int] = 1
+    checkpoint_to_load: Optional[str] = None  # Path to checkpoint.
+    checkpoint_max_to_keep: Optional[int] = 1  # None: keep all checkpoints.
     checkpoint_directory: str = '~/acme/'
     time_delta_minutes: float = 30
     terminal: str ='current_terminal'
