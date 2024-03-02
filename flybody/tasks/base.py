@@ -189,7 +189,7 @@ class FruitFlyTask(composer.Task, ABC):
   def get_reward(self, physics: 'mjcf.Physics') -> float:
     # Check termination.
     self._should_terminate = self.check_termination(physics)
-    return np.product(self.get_reward_factors(physics))
+    return np.prod(self.get_reward_factors(physics))
 
   @abstractmethod
   def get_reward_factors(self, physics: 'mjcf.Physics') -> Sequence[float]:
