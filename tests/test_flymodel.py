@@ -1,10 +1,13 @@
 """Test fly body parameters and pure physics (outside of RL environment)."""
 
+import os
+
 import numpy as np
 from dm_control import mjcf
 
 
-xml_path = '../flybody/fruitfly/assets/fruitfly.xml'
+xml_path = os.path.join(os.path.dirname(__file__),
+                        '../flybody/fruitfly/assets/fruitfly.xml')
 
 def test_flymodel():
 
