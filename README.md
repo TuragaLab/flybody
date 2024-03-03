@@ -1,6 +1,9 @@
 # `flybody`
 MuJoCo fruit fly body model and reinforcement learning tasks
 
+## Getting started
+Coming soon
+
 ## Installation
 
 Follow these steps to install `flybody`:
@@ -42,3 +45,6 @@ Follow these steps to install `flybody`:
    ```
 
 6. You may want to run `pytest` to test the main aspects of the `flybody` installation.
+
+## Citing flybody
+Coming soon
