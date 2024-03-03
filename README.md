@@ -3,7 +3,7 @@ MuJoCo fruit fly body model and reinforcement learning tasks
 
 ## Installation
 
-#### Follow these steps to install `flybody`:
+Follow these steps to install `flybody`:
 
 1. Clone this repo and create a new conda environment:
    ```bash
@@ -14,8 +14,7 @@ MuJoCo fruit fly body model and reinforcement learning tasks
    ```
 
 2. The `flybody` library can be installed in one of three modes. Core installation: minimal installation for experimenting with the
-   fly model in MuJoCo or with dm_control task environments. ML dependencies such as Tensorflow and Acme are not included and policy rollouts and
-   training are not supported.
+   fly model in MuJoCo or with dm_control task environments. ML dependencies such as [Tensorflow](https://github.com/tensorflow/tensorflow) and [Acme](https://github.com/google-deepmind/acme) are not included and policy rollouts and training are not automatically supported.
    ```bash
    pip install -e .
    ```
