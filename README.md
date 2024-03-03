@@ -40,3 +40,6 @@ Follow these steps to install `flybody`:
    ```bash
    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/YOUR/PATH/TO/miniconda3/envs/flybody/lib
    ```
+
+   6. You may want to run `pytest` to test the main aspects of the `flybody` installation.
+   
