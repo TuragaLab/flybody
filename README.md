@@ -14,19 +14,19 @@ Follow these steps to install `flybody`:
    ```
 
 2. The `flybody` library can be installed in one of three modes. Core installation: minimal installation for experimenting with the
-   fly model in MuJoCo or with dm_control task environments. ML dependencies such as [Tensorflow](https://github.com/tensorflow/tensorflow) and [Acme](https://github.com/google-deepmind/acme) are not included and policy rollouts and training are not automatically supported.
+   fly model in MuJoCo or prototyping task environments. ML dependencies such as [Tensorflow](https://github.com/tensorflow/tensorflow) and [Acme](https://github.com/google-deepmind/acme) are not included and policy rollouts and training are not automatically supported.
    ```bash
    pip install -e .
    ```
    
 3. ML extension (optional): same as core installation, plus ML dependencies (Tensorflow, Acme) to allow running
-   policy networks, e.g. for inference or for training using custom agents not included in this library.
+   policy networks, e.g. for inference or for training using third-party agents not included in this library.
    ```bash
    pip install -e .[tf]
    ```
 
-4. Ray training extension (optional): Same as core installation and ML extension, plus [Ray](https://github.com/ray-project/ray) to also enable
-   distributed policy training in the dm_control task environments.
+4. Ray training extension (optional): same as core installation and ML extension, plus [Ray](https://github.com/ray-project/ray) to also enable
+   distributed policy training in the fly task environments.
    ```bash
    pip install -e .[ray]
    ```
