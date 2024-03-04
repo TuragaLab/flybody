@@ -1,4 +1,4 @@
-<img src="fly-white.png" width="15%">
+<img src="fly-white.png" width="20%">
 
 # `flybody`
 MuJoCo fruit fly body model and reinforcement learning tasks
