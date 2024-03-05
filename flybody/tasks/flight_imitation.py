@@ -44,6 +44,7 @@ class FlightImitationWBPG(Flying):
     self._traj_generator = traj_generator
     self._terminal_com_dist = terminal_com_dist
     self._trajectory_sites = trajectory_sites
+    self._next_traj_idx = None
 
     # Add axis crosshair.
     self._crosshair_sites = []
@@ -73,10 +74,20 @@ class FlightImitationWBPG(Flying):
     self._walker.observables.add_observable('ref_root_quat',
                                             self.ref_root_quat)
 
+  def set_next_trajectory_index(self, idx):
+    """In the next episode (only), this requested trajectory will be used.
+    Could be used for testing, debugging.
+    """
+    self._next_traj_idx = idx
+
   def initialize_episode_mjcf(self, random_state: np.random.RandomState):
     super().initialize_episode_mjcf(random_state)
 
-    self._ref_qpos, self._ref_qvel = self._traj_generator.get_trajectory()
+    # Get next trajectory.
+    self._ref_qpos, self._ref_qvel = self._traj_generator.get_trajectory(
+      traj_idx=self._next_traj_idx)
+    self._next_traj_idx = None  # Reset if wasn't None.
+    
     # Transform _ghost_qpos trajectory (which is really CoM trajectory from
     # data) to the corresponding actual qpos of ghost root joint.
     ghost_root_pos = com2root(self._ref_qpos[:, :3], self._ref_qpos[:, 3:])
