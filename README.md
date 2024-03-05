@@ -40,7 +40,7 @@ Follow these steps to install `flybody`:
    export MUJOCO_GL=egl
    export MUJOCO_EGL_DEVICE_ID=0
    ```
-   As well as, for the ML and Ray extensions, possibly:
+   Also, for the ML and Ray extensions, `LD_LIBRARY_PATH` may require an update, e.g.:
    ```bash
    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/YOUR/PATH/TO/miniconda3/envs/flybody/lib
    ```
