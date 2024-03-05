@@ -22,13 +22,16 @@ from flybody.tasks.trajectory_loaders import (
 
 def flight_imitation(wpg_pattern_path: str,
                      ref_path: str,
-                     random_state:np.random.RandomState = None):
+                     random_state:np.random.RandomState = None,
+                     terminal_com_dist: float = 2.0):
   """Requires a fruitfly to track a flying reference.
   
     Args:
       wpg_pattern_path: Path to baseline wing beat pattern for WPG.
       ref_path: Path to reference trajectory dataset.
       random_state: Random state for reproducibility.
+      terminal_com_dist: Episode will be terminated when distance from model
+          CoM to ghost CoM exceeds terminal_com_dist. Can be float('inf').
 
     Returns:
       Environment for flight tracking task.
@@ -46,6 +49,7 @@ def flight_imitation(wpg_pattern_path: str,
                              arena=arena,
                              wbpg=wbpg,
                              traj_generator=traj_generator,
+                             terminal_com_dist=terminal_com_dist,
                              initialize_qvel=True,
                              time_limit=time_limit,
                              joint_filter=0.,
@@ -58,13 +62,15 @@ def flight_imitation(wpg_pattern_path: str,
 
 
 def walk_imitation(ref_path: str,
-                   random_state:np.random.RandomState = None):
+                   random_state:np.random.RandomState = None,
+                   terminal_com_dist: float = 0.3):
   """Requires a fruitfly to track a reference walking fly.
 
     Args:
       ref_path: Path to reference trajectory dataset.
       random_state: Random state for reproducibility.
-
+      terminal_com_dist: Episode will be terminated when distance from model
+          CoM to ghost CoM exceeds terminal_com_dist. Can be float('inf').
     Returns:
       Environment for walking tracking task.
   """
@@ -79,6 +85,7 @@ def walk_imitation(ref_path: str,
   task = WalkImitation(walker=walker,
                        arena=arena,
                        traj_generator=traj_generator,
+                       terminal_com_dist=terminal_com_dist,
                        mocap_joint_names=traj_generator.get_joint_names(),
                        mocap_site_names=traj_generator.get_site_names(),
                        joint_filter=0.01,
