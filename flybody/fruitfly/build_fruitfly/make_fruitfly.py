@@ -602,15 +602,15 @@ def main(argv: Sequence[str]):
         height *= 1.5
       else:
         # quat = quat_z2vec(np.array((0, 1., 0)))
-        angle = np.pi/2 + 0.1
+        angle = np.pi/2
         rotate = np.array((np.cos(angle/2), 0, np.sin(angle/2), 0))
         quat = mul_quat(quat, rotate)
-        pos[2] -= 0.0875 * size[0]
-        radius *= 1.05
+        pos[2] -= 0.28 * size[0]
+        radius *= 1.1025
       if '3' in abdomen.name:
         pos[2] += 0.0021875
       if '6' in abdomen.name:
-        angle = - 0.096
+        angle = 0.
         rotate = np.array((np.cos(angle/2), 0, np.sin(angle/2), 0))
         quat = mul_quat(quat, rotate)
       size = np.array([radius, height, 0])

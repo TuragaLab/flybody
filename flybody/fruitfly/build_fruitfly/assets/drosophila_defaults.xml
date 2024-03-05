@@ -43,7 +43,7 @@
       </default>
 
       <default class="head">
-        <geom density="0.575"/>
+        <geom density="0.713432"/>
         <joint stiffness="0.03" damping="0.001"/>
         <general forcerange="-0.1 0.1" gainprm="0.1" biasprm="0 -0.1" biastype="affine"/>
         <default class="labrum">
@@ -89,7 +89,7 @@
       </default>
 
       <default class="abdomen">
-        <geom density="0.445"/>
+        <geom density="0.55455"/>
         <general gainprm="0.1" biasprm="0 -0.1" biastype="affine"/>
         <joint damping="0.01" stiffness="0.05" group="3"/>
         <default class="abduct_abdomen">
@@ -106,7 +106,7 @@
 
       <default class="leg">
         <joint stiffness="0.01" damping="0.01"/>
-        <geom density="1.209"/>
+        <geom density="1.18409"/>
         <default class="coxa">
           <general gainprm="0.8" biasprm="0 -0.8" biastype="affine"/>
           <default class="twist_coxa_T1">

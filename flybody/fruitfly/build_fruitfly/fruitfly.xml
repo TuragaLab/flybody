@@ -34,7 +34,7 @@
       </default>
       <default class="head">
         <joint stiffness="0.03" damping="0.001"/>
-        <geom density="0.575"/>
+        <geom density="0.713"/>
         <general forcerange="-0.1 0.1" biastype="affine" gainprm="0.1" biasprm="0 -0.1"/>
         <default class="labrum">
           <general forcerange="-0.01 0.01" biastype="affine" gainprm="0.01" biasprm="0 -0.01"/>
@@ -77,7 +77,7 @@
       </default>
       <default class="abdomen">
         <joint group="3" stiffness="0.05" damping="0.01"/>
-        <geom density="0.445"/>
+        <geom density="0.555"/>
         <general biastype="affine" gainprm="0.1" biasprm="0 -0.1"/>
         <default class="abduct_abdomen">
           <joint axis="0 0 1" range="-0.1 0.1"/>
@@ -91,7 +91,7 @@
       </default>
       <default class="leg">
         <joint stiffness="0.01" damping="0.01"/>
-        <geom density="1.21"/>
+        <geom density="1.18"/>
         <default class="coxa">
           <general biastype="affine" gainprm="0.8" biasprm="0 -0.8"/>
           <default class="twist_coxa_T1">
@@ -403,43 +403,43 @@
         <joint name="abdomen" class="extend_abdomen"/>
         <geom name="abdomen" pos="0.000758 -0.0663 -0.115" quat="0.7 -0.0853 0.0859 0.704" mesh="abdomen_1"/>
         <geom name="abdomen_lower" material="lower" pos="0.000758 -0.0663 -0.115" quat="0.7 -0.0853 0.0859 0.704" mesh="abdomen_1_lower"/>
-        <geom name="abdomen_collision" class="collision" type="cylinder" size="0.028 0.00997 0" pos="-0.000207 0.00588 -0.0162" quat="0.019 -0.0329 0.822 0.568"/>
+        <geom name="abdomen_collision" class="collision" type="cylinder" size="0.0281 0.0102 0" pos="-0.000187 0.00646 -0.0146" quat="0.0104 -0.0205 0.824 0.566"/>
         <body name="abdomen_2" pos="0 0.0119 0" quat="0.981 -0.192 -0.000269 0.00144">
           <joint name="abdomen_abduct_2" class="abduct_abdomen"/>
           <joint name="abdomen_2" class="extend_abdomen"/>
           <geom name="abdomen_2" pos="0.000532 -0.0293 -0.136" quat="0.704 0.0507 -0.0503 0.706" mesh="abdomen_2"/>
           <geom name="abdomen_2_lower" material="lower" pos="0.000532 -0.0293 -0.136" quat="0.704 0.0507 -0.0503 0.706" mesh="abdomen_2_lower"/>
-          <geom name="abdomen_2_collision" class="collision" type="cylinder" size="0.0365 0.014 0" pos="-0.00015 0.0165 -0.0175" quat="0.49 -0.529 0.509 0.47"/>
+          <geom name="abdomen_2_collision" class="collision" type="cylinder" size="0.0367 0.0142 0" pos="-0.000182 0.0166 -0.0177" quat="-0.0111 0.0103 0.695 0.719"/>
           <body name="abdomen_3" pos="0 0.0212 0" quat="0.996 -0.0909 6.69e-05 0.000525">
             <joint name="abdomen_abduct_3" class="abduct_abdomen"/>
             <joint name="abdomen_3" class="extend_abdomen"/>
             <geom name="abdomen_3" pos="0.000511 -0.0251 -0.143" quat="0.697 0.114 -0.114 0.699" mesh="abdomen_3"/>
             <geom name="abdomen_3_lower" material="lower" pos="0.000511 -0.0251 -0.143" quat="0.697 0.114 -0.114 0.699" mesh="abdomen_3_lower"/>
-            <geom name="abdomen_3_collision" class="collision" type="cylinder" size="0.0397 0.019 0" pos="6.47e-05 0.02 -0.0165" quat="0.534 -0.504 0.462 0.497"/>
+            <geom name="abdomen_3_collision" class="collision" type="cylinder" size="0.0389 0.0194 0" pos="3.29e-05 0.0198 -0.0174" quat="0.71 -0.591 0.239 0.3"/>
             <body name="abdomen_4" pos="0 0.0313 0" quat="0.999 -0.0332 0.000147 -0.000229">
               <joint name="abdomen_abduct_4" class="abduct_abdomen"/>
               <joint name="abdomen_4" class="extend_abdomen"/>
               <geom name="abdomen_4" pos="0.000577 -0.0468 -0.146" quat="0.693 0.137 -0.138 0.695" mesh="abdomen_4"/>
               <geom name="abdomen_4_lower" material="lower" pos="0.000577 -0.0468 -0.146" quat="0.693 0.137 -0.138 0.695" mesh="abdomen_4_lower"/>
-              <geom name="abdomen_4_collision" class="collision" type="cylinder" size="0.0406 0.0172 0" pos="0.000123 0.0154 -0.0188" quat="0.519 -0.485 0.475 0.52"/>
+              <geom name="abdomen_4_collision" class="collision" type="cylinder" size="0.0396 0.0176 0" pos="9.67e-05 0.015 -0.0192" quat="0.0186 -0.0235 0.637 0.77"/>
               <body name="abdomen_5" pos="0 0.0262 0" quat="0.999 -0.0368 -4.72e-05 -0.000327">
                 <joint name="abdomen_abduct_5" class="abduct_abdomen"/>
                 <joint name="abdomen_5" class="extend_abdomen"/>
                 <geom name="abdomen_5" pos="0.000607 -0.062 -0.151" quat="0.687 0.163 -0.163 0.689" mesh="abdomen_5"/>
                 <geom name="abdomen_5_lower" material="lower" pos="0.000607 -0.062 -0.151" quat="0.687 0.163 -0.163 0.689" mesh="abdomen_5_lower"/>
-                <geom name="abdomen_5_collision" class="collision" type="cylinder" size="0.0371 0.0156 0" pos="0.000281 0.0111 -0.0184" quat="0.518 -0.463 0.478 0.537"/>
+                <geom name="abdomen_5_collision" class="collision" type="cylinder" size="0.0371 0.016 0" pos="0.000282 0.0105 -0.0187" quat="0.0262 -0.0206 0.624 0.781"/>
                 <body name="abdomen_6" pos="0 0.0213 0" quat="0.998 -0.0662 0.000156 -0.000351">
                   <joint name="abdomen_abduct_6" class="abduct_abdomen"/>
                   <joint name="abdomen_6" class="extend_abdomen"/>
                   <geom name="abdomen_6" pos="0.000707 -0.0626 -0.161" quat="0.674 0.208 -0.208 0.677" mesh="abdomen_6"/>
                   <geom name="abdomen_6_lower" material="lower" pos="0.000707 -0.0626 -0.161" quat="0.674 0.208 -0.208 0.677" mesh="abdomen_6_lower"/>
-                  <geom name="abdomen_6_collision" class="collision" type="cylinder" size="0.0316 0.0138 0" pos="-0.00013 0.01 -0.0165" quat="-0.0443 0.0302 0.595 0.802"/>
+                  <geom name="abdomen_6_collision" class="collision" type="cylinder" size="0.0334 0.0141 0" pos="-0.000157 0.00942 -0.017" quat="-0.00292 0.00201 0.592 0.806"/>
                   <body name="abdomen_7" pos="0 0.0182 0" quat="0.995 -0.102 -1.79e-06 -0.000187">
                     <joint name="abdomen_abduct_7" class="abduct_abdomen"/>
                     <joint name="abdomen_7" class="extend_abdomen"/>
                     <geom name="abdomen_8" pos="0.000731 -0.0464 -0.174" quat="0.649 0.276 -0.276 0.653" mesh="abdomen_8"/>
                     <geom name="abdomen_7" pos="0.000731 -0.0464 -0.174" quat="0.649 0.276 -0.276 0.653" mesh="abdomen_7"/>
-                    <geom name="abdomen_7_collision" class="collision" type="sphere" size="0.0262" pos="-3.05e-05 0.0133 -0.0119"/>
+                    <geom name="abdomen_7_collision" class="collision" type="sphere" size="0.0262" pos="-3.83e-05 0.0134 -0.0108"/>
                     <geom name="abdomen_7_lower" material="lower" pos="0.000731 -0.0464 -0.174" quat="0.649 0.276 -0.276 0.653" mesh="abdomen_7_lower"/>
                   </body>
                 </body>
