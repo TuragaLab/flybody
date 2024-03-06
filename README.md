@@ -1,4 +1,7 @@
 # `flybody` <img src="fly-white.png" width="20%">
+
+![example workflow](https://github.com/TuragaLab/flybody/actions/workflows/pytest.yml/badge.svg)
+
 MuJoCo fruit fly body model and reinforcement learning tasks
 
 ## Getting started
