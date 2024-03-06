@@ -1,5 +1,6 @@
 """Test core installation by creating an RL environment and stepping it."""
 
+import os
 import numpy as np
 from flybody.fly_envs import walk_on_ball
 
@@ -17,6 +18,7 @@ obs_names = ['accelerometer',
              'ball_qvel']
 
 obs_names = ['walker/' + s for s in obs_names]
+
 
 def test_can_create_and_run_environment():
 
@@ -38,3 +40,6 @@ def test_can_create_and_run_environment():
         timestep = env.step(action)
         assert timestep.reward is not None
 
+    # For local testing only.
+    if os.environ['MUJOCO_GL'] == 'egl':
+        _ = env.physics.render()
