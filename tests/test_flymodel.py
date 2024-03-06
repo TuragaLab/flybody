@@ -1,7 +1,6 @@
 """Test fly body parameters and pure physics (outside of RL environment)."""
 
 import os
-
 import numpy as np
 from dm_control import mjcf
 
@@ -53,4 +52,7 @@ def test_can_compile_and_step_simulation():
         physics.step()
         assert isinstance(physics.data.sensordata, np.ndarray)
 
+    # For local testing only.
+    if os.environ['MUJOCO_GL'] == 'egl':
+        _ = physics.render()
 
