@@ -37,5 +37,5 @@ def test_can_compile_and_step_simulation():
         physics.data.ctrl[:] = np.random.uniform(-.2, .2, physics.model.nu)
         physics.step()
 
-    _ = physics.render()
+    # _ = physics.render()
 

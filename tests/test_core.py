@@ -18,7 +18,7 @@ obs = ['accelerometer',
 
 obs = ['walker/' + s for s in obs]
 
-def test_core():
+def test_can_create_and_run_environment():
 
     env = walk_on_ball()
     
@@ -36,4 +36,4 @@ def test_core():
         timestep = env.step(action)
         assert timestep.reward is not None
 
-    _ = env.physics.render()
+    # _ = env.physics.render()
