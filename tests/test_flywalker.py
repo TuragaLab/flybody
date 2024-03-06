@@ -40,7 +40,6 @@ def test_fly_bulletproof():
         filter = config['filter']
         user_action = config['user_action']
 
-        # fly = get_fly(use, filter, user_action)
         fly = FruitFly(use_legs=use[0],
                        use_wings=use[1],
                        use_mouth=use[2],
