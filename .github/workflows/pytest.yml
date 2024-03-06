@@ -31,4 +31,4 @@ jobs:
         export MUJOCO_GL=egl
     - name: Test with pytest
       run: |
-        pytest
+        pytest tests/
