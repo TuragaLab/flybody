@@ -30,5 +30,5 @@ jobs:
         pip install .
     - name: Test with pytest
       run: |
-        export MUJOCO_GL="glfw"
+        export MUJOCO_GL="egl"
         pytest tests/
