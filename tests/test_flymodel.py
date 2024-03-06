@@ -23,6 +23,9 @@ def test_flymodel():
     assert physics.model.nsensordata == 33  # Sensor readings.
     assert physics.model.nsite == 15  # Sites.
     assert physics.model.nmesh == 85  # Meshes.
+    assert np.isclose(
+        physics.named.model.body_subtreemass['thorax'],
+        0.0009846214672177625)  # Total fly mass.
 
 def test_can_compile_and_step_simulation():
 
@@ -35,3 +38,4 @@ def test_can_compile_and_step_simulation():
         physics.step()
 
     _ = physics.render()
+

@@ -15,7 +15,7 @@ obs = ['accelerometer',
        'velocimeter',
        'world_zaxis',
        'ball_qvel']
-       
+
 obs = ['walker/' + s for s in obs]
 
 def test_core():
