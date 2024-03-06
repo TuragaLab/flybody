@@ -31,15 +31,6 @@ configs = [{'use': use, 'filter': filter, 'user_action': user_action}
            for filter in filters
            for user_action in user_actions]
 
-def get_fly(use, filter, user_action):
-    return FruitFly(use_legs=use[0],
-                    use_wings=use[1],
-                    use_mouth=use[2],
-                    use_antennae=use[3],
-                    joint_filter=filter[0],
-                    adhesion_filter=filter[1],
-                    num_user_actions=user_action)
-
 
 def test_fly_bulletproof():
     """Test fly walker in all possible configurations."""
@@ -57,7 +48,7 @@ def test_fly_bulletproof():
                        joint_filter=filter[0],
                        adhesion_filter=filter[1],
                        num_user_actions=user_action)
-                       
+
         # Test can compile and step simulation.
         physics = mjcf.Physics.from_mjcf_model(fly.mjcf_model)
         n_actions = fly.action_spec.shape[0]
