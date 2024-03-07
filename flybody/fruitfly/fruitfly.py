@@ -161,6 +161,7 @@ class FruitFly(legacy_base.Walker):
       eye_camera_size: Size in pixels (height and width) of the eye cameras.
         Height and width are assumed equal.
     """
+    self._use_wings = use_wings
     self._adhesion_filter = adhesion_filter
     self._control_timestep = control_timestep
     self._buffer_size = int(round(control_timestep/physics_timestep))
@@ -334,8 +335,18 @@ class FruitFly(legacy_base.Walker):
     # Save the weight of the body (in Dyne i.e. gram*cm/s^2).
     body_mass = physics.named.model.body_subtreemass['walker/thorax']  # gram.
     self._weight = np.linalg.norm(physics.model.opt.gravity) * body_mass
+    # Fold wings if not used.
+    if not self._use_wings:
+      for s in ['left', 'right']:
+        for dof in ['yaw', 'roll', 'pitch']:
+          j = f'walker/wing_{dof}_{s}'
+          physics.named.data.qpos[j] = physics.named.model.qpos_spring[j]
 
   #-----------------------------------------------------------------------------
+
+  @property
+  def name(self):
+    return self._mjcf_root.model
 
   @property
   def upright_pose(self):

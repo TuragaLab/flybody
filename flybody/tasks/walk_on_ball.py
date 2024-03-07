@@ -57,8 +57,6 @@ class WalkOnBall(Walking):
                          random_state: np.random.RandomState):
     """Randomly selects a starting point and set the walker."""
     super().initialize_episode(physics, random_state)
-    # Retract wings.
-    retract_wings(physics)
 
   def before_step(self, physics: 'mjcf.Physics', action,
                   random_state: np.random.RandomState):
