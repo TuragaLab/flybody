@@ -1,9 +1,9 @@
-# `flybody` <img src="fly-white.png" width="20%">
+<img src="fly-white.png" width="20%">
+
+# `flybody`: MuJoCo fruit fly body model
 
 ![pytest workflow](https://github.com/TuragaLab/flybody/actions/workflows/pytest.yml/badge.svg)
 ![python versions](https://github.com/TuragaLab/flybody/actions/workflows/pyversions.yml/badge.svg)
-
-MuJoCo fruit fly body model and reinforcement learning tasks
 
 ## Getting started
 Coming soon
@@ -46,7 +46,7 @@ Follow these steps to install `flybody`:
    ```
    Also, for the ML and Ray extensions, `LD_LIBRARY_PATH` may require an update, e.g.:
    ```bash
-   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/YOUR/PATH/TO/miniconda3/envs/flybody/lib
+   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/your/path/to/miniconda3/envs/flybody/lib
    ```
 
 7. You may want to run `pytest` to test the main aspects of the `flybody` installation.
