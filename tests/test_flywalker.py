@@ -142,3 +142,8 @@ def test_orientation():
     fly = FruitFly()
     for item in fly.observables.orientation:
         assert isinstance(item, observable_base.Observable)
+
+def test_set_name():
+    name = 'fruity'
+    fly = FruitFly(name=name)
+    assert fly.name == name
