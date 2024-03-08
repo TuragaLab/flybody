@@ -33,4 +33,4 @@ jobs:
     - name: Test with pytest
       run: |
         export MUJOCO_GL="glfw"
-        pytest tests/test_flymodel.py tests/test_core.py
+        pytest tests/test_flybare.py tests/test_core.py
