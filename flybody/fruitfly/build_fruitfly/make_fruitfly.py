@@ -127,10 +127,6 @@ def main(argv: Sequence[str]):
   for material in model.find_all('material'):
     material.shininess = round(material.shininess * 1e6) * 1e-6
 
-  print('Add global cameras.')
-  model.worldbody.add('camera', name='hero', pos=(0.271, 0.270, -0.044),
-                      xyaxes=(-0.641, 0.767, 0, -0.045, -0.037, 0.998))
-
   print('Remove _Armature suffix.')
   things = [model.find_all(thing) for thing in ['body', 'joint', 'geom']]
   things = sum(things, [])
@@ -1034,6 +1030,7 @@ def main(argv: Sequence[str]):
                 dir=(0, -1, -1), diffuse=(0.3, 0.3, 0.3))
   thorax.insert('light', 1, name='right', mode='trackcom', pos=(0, -1, 1),
                 dir=(0, 1, -1), diffuse=(0.3, 0.3, 0.3))
+  
   thorax.insert(
       'camera',
       2,
@@ -1067,7 +1064,7 @@ def main(argv: Sequence[str]):
       6,
       name='side',
       mode='track',
-      pos=(-0.055, 0.424, -0.064),
+      pos=(-0.045, 0.424, -0.035),
       xyaxes=(-1, 0, 0, 0, 0, 1))
   thorax.insert(
       'camera',
@@ -1076,6 +1073,13 @@ def main(argv: Sequence[str]):
       mode='track',
       pos=(0.01, 0, -0.516),
       xyaxes=(0, 1, 0, .991, 0, 0.136))
+  thorax.insert(
+      'camera',
+      8,
+      name='hero',
+      mode='track',
+      pos=(0.271, 0.270, -0.044),
+      xyaxes=(-0.641, 0.767, 0, -0.045, -0.037, 0.998))
 
   print('Check masses (values in milligrams)')
   def print_mass(name, current, emp):
