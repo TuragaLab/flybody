@@ -41,5 +41,5 @@ def test_can_create_and_run_environment():
         assert timestep.reward is not None
 
     # For local testing only.
-    if os.environ['MUJOCO_GL'] == 'egl':
+    if 'MUJOCO_GL' in os.environ and os.environ['MUJOCO_GL'] == 'egl':
         _ = env.physics.render()

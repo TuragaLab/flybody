@@ -17,7 +17,7 @@ OBS_NAMES = ['thorax_height', 'abdomen_height', 'world_zaxis_hover',
              'force', 'touch', 'accelerometer', 'gyro', 'velocimeter',
              'actuator_activation', 'appendages_pos']
 # For local testing only.
-if os.environ['MUJOCO_GL'] == 'egl':
+if 'MUJOCO_GL' in os.environ and os.environ['MUJOCO_GL'] == 'egl':
     OBS_NAMES = OBS_NAMES + ['right_eye', 'left_eye']
 
 # Prepare all possible configurations to test fly walker with.
