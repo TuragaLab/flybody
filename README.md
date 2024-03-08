@@ -1,9 +1,9 @@
-<img src="fly-white.png" width="20%">
-
 # `flybody`: MuJoCo fruit fly body model
 
 ![pytest workflow](https://github.com/TuragaLab/flybody/actions/workflows/pytest.yml/badge.svg)
 ![python versions](https://github.com/TuragaLab/flybody/actions/workflows/pyversions.yml/badge.svg)
+
+<img src="fly-white.png" width="25%">
 
 ## Getting started
 Coming soon
