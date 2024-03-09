@@ -1,4 +1,4 @@
-# `flybody`: MuJoCo fruit fly body model
+# `flybody`: fruit fly body model for MuJoCo physics
 
 <img src="fly-white.png" width="25%">
 
