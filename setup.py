@@ -39,6 +39,10 @@ setup(
     name='flybody',
     version='0.1',
     packages=find_packages(),
+    package_data={
+        "": ['*.amc', '*.msh', '*.png', '*.skn', '*.stl', '*.xml',
+             '*.textproto', '*.h5'],
+    },
     python_requires='>=3.10',
     install_requires=core_requirements,
     extras_require={
