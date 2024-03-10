@@ -1,6 +1,6 @@
 """Install script for setuptools."""
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 # The flybody package can be installed in three modes:
 #
@@ -38,7 +38,7 @@ ray_requirements = tf_requirements + [
 setup(
     name='flybody',
     version='0.1',
-    packages=['flybody'],
+    packages=find_packages(),
     python_requires='>=3.10',
     install_requires=core_requirements,
     extras_require={
