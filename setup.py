@@ -40,9 +40,7 @@ setup(
     version='0.1',
     packages=find_packages(),
     package_data={
-        'flybody': ['fruitfly/assets/*.msh', 'fruitfly/assets/*.xml'
-                    '../tests/*.py',
-        ],
+        'flybody': ['fruitfly/assets/*.msh', 'fruitfly/assets/*.xml'],
     },
     python_requires='>=3.10',
     install_requires=core_requirements,
