@@ -9,7 +9,7 @@
 
 ## Getting started
 
-The quickest way to get started with is to take a look at an introductory tutorial [notebook](https://github.com/TuragaLab/flybody/blob/main/notebooks/getting-started.ipynb) or <a target="_blank" href="https://colab.research.google.com/github/TuragaLab/flybody/blob/main/notebooks/getting-started.ipynb">
+The quickest way to get started is to take a look at an introductory tutorial [notebook](https://github.com/TuragaLab/flybody/blob/main/notebooks/getting-started.ipynb) or <a target="_blank" href="https://colab.research.google.com/github/TuragaLab/flybody/blob/main/notebooks/getting-started.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
@@ -52,15 +52,16 @@ Follow these steps to install `flybody`:
    conda create --name flybody python=3.10 pip ipython cudatoolkit cudnn=8.2.1=cuda11.3_0
    conda activate flybody
    ```
-2. Core installation:
+   Proceed with installation in one of the three modes (described above):
+2. **Core installation**:
    ```bash
    pip install git+https://github.com/TuragaLab/flybody.git
    ```
-3. ML extension (optional):
+3. **ML extension (optional)**:
    ```bash
    pip install "flybody[tf] @ git+https://github.com/TuragaLab/flybody.git"
    ```
-5. Ray training extension (optional):
+5. **Ray training extension (optional)**:
    ```bash
    pip install "flybody[ray] @ git+https://github.com/TuragaLab/flybody.git"
    ```
