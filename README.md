@@ -8,7 +8,8 @@
 `flybody` is an anatomically-detailed body model of the fruit fly _Drosophila melanogaster_ for MuJoCo physics simulator and reinforcement learning applications. The fly model was developed in a collaborative effort by Google DeepMind and HHMI Janelia Research Campus. We envision our model as a platform for fruit fly biophysics simulations and for modeling neural control of sensorimotor behavior in an embodied context.
 
 ## Getting started
-Coming soon
+
+The quickest way to get started with `flybody` is to take a look at an introductory tutorial [notebook](https://github.com/TuragaLab/flybody/blob/main/notebooks/getting-started.ipynb).
 
 ## Installation
 
