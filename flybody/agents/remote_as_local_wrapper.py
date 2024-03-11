@@ -52,9 +52,11 @@ class RemoteAsLocal():
                 obj_ref = getattr(self._remote_handle,
                                   method_name).remote(*args, **kwargs)
                 if block:
-                    return ray.get(obj_ref)  # Block until called method returns.
+                    return ray.get(
+                        obj_ref)  # Block until called method returns.
                 else:
                     return obj_ref  # Don't block and return a future.
+
             return wrapper
 
         for member in inspect.getmembers(self._remote_handle):

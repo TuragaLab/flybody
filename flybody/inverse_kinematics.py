@@ -1,4 +1,5 @@
 """Multi-site inverse kinematics fitting for MuJoCo models."""
+# ruff: noqa: F821
 
 from typing import Sequence, NamedTuple, Union, List
 from collections import namedtuple
@@ -6,6 +7,7 @@ import logging
 
 import numpy as np
 from dm_control.mujoco.wrapper import mjbindings
+
 mjlib = mjbindings.mjlib
 
 
@@ -86,8 +88,9 @@ def qpos_from_site_xpos(physics: 'mjcf.Physics',
     site_indices = name2id(physics, names=site_names, object_type='site')
     row_indexer = physics.named.model.dof_jntid.axes.row
     dof_indices = row_indexer.convert_key_item(joint_names)
-    hinge_joint_names = [name for name in joint_names
-                         if physics.named.model.jnt_type[name] == 3]
+    hinge_joint_names = [
+        name for name in joint_names if physics.named.model.jnt_type[name] == 3
+    ]
     hinge_dof_indices = row_indexer.convert_key_item(hinge_joint_names)
 
     if not inplace:
@@ -103,11 +106,12 @@ def qpos_from_site_xpos(physics: 'mjcf.Physics',
                         reg_strength, include_inds)  # (partial nv,)
 
         # Prepare a gradient descent step (with momentum).
-        update = beta*update + grad
-        nv_update[dof_indices] = - lr*update
+        update = beta * update + grad
+        nv_update[dof_indices] = -lr * update
 
         # Update physics.qpos, taking quaternions into account.
-        mjlib.mj_integratePos(physics.model.ptr, physics.data.qpos, nv_update, 1)
+        mjlib.mj_integratePos(physics.model.ptr, physics.data.qpos, nv_update,
+                              1)
 
         # Compute the new Cartesian position of the sites.
         mjlib.mj_fwdPosition(physics.model.ptr, physics.data.ptr)
@@ -115,17 +119,19 @@ def qpos_from_site_xpos(physics: 'mjcf.Physics',
         # Check error every 100 iterations.
         if step % 100 == 0:
             site_xpos = physics.named.data.site_xpos[site_indices]
-            err = objective(physics, target_xpos, site_xpos,
-                            hinge_joint_names, reg_strength, include_inds)
+            err = objective(physics, target_xpos, site_xpos, hinge_joint_names,
+                            reg_strength, include_inds)
             progress_criterion = lr * np.linalg.norm(update) / err
             if progress_criterion < progress_threshold:
                 success = True
                 logging.debug(
-                    f'Progress threshold reached after {step} steps: err = {err}')
+                    f'Progress threshold reached after {step} steps: err = {err}'
+                )
                 break
 
     if step == max_steps - 1:
-        logging.warning(f'Failed to converge after {max_steps} steps: err = {err}')
+        logging.warning(
+            f'Failed to converge after {max_steps} steps: err = {err}')
 
     if not inplace:
         # Our temporary copy of physics.data is about to go out of scope,
@@ -140,20 +146,25 @@ def qpos_from_site_xpos(physics: 'mjcf.Physics',
         qpos = physics.data.qpos
 
     # Calculate the residual of the first term only.
-    err_first_term = objective(physics, target_xpos, site_xpos,
-        hinge_joint_names, reg_strength=0, include_inds=include_inds)
+    err_first_term = objective(physics,
+                               target_xpos,
+                               site_xpos,
+                               hinge_joint_names,
+                               reg_strength=0,
+                               include_inds=include_inds)
 
     IKResult = namedtuple(
-        'IKResult', ['qpos', 'err_norm', 'err_norm_first_term',
-                     'steps', 'success'])
+        'IKResult',
+        ['qpos', 'err_norm', 'err_norm_first_term', 'steps', 'success'])
 
-    return IKResult(qpos=qpos, err_norm=err,
-                      err_norm_first_term=err_first_term,
-                      steps=step, success=success)
+    return IKResult(qpos=qpos,
+                    err_norm=err,
+                    err_norm_first_term=err_first_term,
+                    steps=step,
+                    success=success)
 
 
-def mj_jac_pos(physics: 'mjcf.Physics',
-               jac: np.ndarray,
+def mj_jac_pos(physics: 'mjcf.Physics', jac: np.ndarray,
                site_indices: Sequence[int]) -> None:
     """Wrapper to generalize mj_jacSite to compute the full translational
     Jacobian analytically for any number of sites.
@@ -168,18 +179,18 @@ def mj_jac_pos(physics: 'mjcf.Physics',
         site_indices: Indices of sites to differentiate.
     """
     for i, site_index in enumerate(site_indices):
-        mjlib.mj_jacSite(
-            physics.model.ptr, physics.data.ptr,
-            jac[3*i:3*i+3, :], None, site_index)
+        mjlib.mj_jacSite(physics.model.ptr, physics.data.ptr,
+                         jac[3 * i:3 * i + 3, :], None, site_index)
 
 
-def objective(physics: 'mjcf.Physics',
-              target_xpos: np.ndarray,
-              site_xpos: np.ndarray,
-              hinge_joint_names: Sequence[str],
-              reg_strength: float,
-              include_inds: Union[slice, List[int]] = slice(None),
-             ) -> float:
+def objective(
+        physics: 'mjcf.Physics',
+        target_xpos: np.ndarray,
+        site_xpos: np.ndarray,
+        hinge_joint_names: Sequence[str],
+        reg_strength: float,
+        include_inds: Union[slice, List[int]] = slice(None),
+) -> float:
     """Computes scalar value of the regularized objective function:
 
     objective = ||s(q)-s*||^2 + a||q||^2
@@ -207,22 +218,24 @@ def objective(physics: 'mjcf.Physics',
         The objective function's value, scalar.
     """
     hinge_qpos = physics.named.data.qpos[hinge_joint_names]
-    diff = (np.array(site_xpos) - np.array(target_xpos)).flatten()[include_inds]
+    diff = (np.array(site_xpos) -
+            np.array(target_xpos)).flatten()[include_inds]
     err_pos = np.linalg.norm(diff)**2
     err_pos += reg_strength * np.linalg.norm(hinge_qpos)**2
     return err_pos
 
 
-def gradient(physics: 'mjcf.Physics',
-             target_xpos: np.ndarray,
-             site_xpos: np.ndarray,
-             site_indices: Sequence[int],
-             dof_indices: Sequence[int],
-             hinge_joint_names: Sequence[str],
-             hinge_dof_indices: Sequence[int],
-             reg_strength: float,
-             include_inds: Union[slice, List[int]] = slice(None),
-            ) -> np.ndarray:
+def gradient(
+        physics: 'mjcf.Physics',
+        target_xpos: np.ndarray,
+        site_xpos: np.ndarray,
+        site_indices: Sequence[int],
+        dof_indices: Sequence[int],
+        hinge_joint_names: Sequence[str],
+        hinge_dof_indices: Sequence[int],
+        reg_strength: float,
+        include_inds: Union[slice, List[int]] = slice(None),
+) -> np.ndarray:
     """Computes the gradient d(objective)/dq, where:
 
     objective = ||s(q)-s*||^2 + a||q||^2
@@ -257,7 +270,7 @@ def gradient(physics: 'mjcf.Physics',
             requested to be modified.
     """
     # Allocate memory for the full Jacobian of shape (3*n_sites, nv).
-    jac_full = np.empty((3*target_xpos.shape[0], physics.model.nv))
+    jac_full = np.empty((3 * target_xpos.shape[0], physics.model.nv))
 
     # This will compute the full translational Jacobian, for all `nv` DOFs.
     # We will have to select only DOFs that correspond to joints we are
@@ -282,12 +295,10 @@ def gradient(physics: 'mjcf.Physics',
     return grad  # (partial nv,)
 
 
-def name2id(physics: 'mjcf.Physics',
-            names: Union[str, Sequence[str]],
+def name2id(physics: 'mjcf.Physics', names: Union[str, Sequence[str]],
             object_type: str) -> List[int]:
     """Returns list of MuJoCo object ids for specified names and object type."""
     if isinstance(names, str):
         names = [names]
-    ids = [physics.model.name2id(name, object_type)
-           for name in names]
+    ids = [physics.model.name2id(name, object_type) for name in names]
     return ids

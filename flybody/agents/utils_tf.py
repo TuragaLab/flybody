@@ -6,7 +6,7 @@ from acme.tf import utils as tf2_utils
 class TestPolicyWrapper():
     """At test time, wraps policy to work with non-batched observations.
     Works with distributional policies, e.g. trained with the DMPO agent."""
-    
+
     def __init__(self, policy, sample=False):
         """
         Args:
@@ -16,7 +16,7 @@ class TestPolicyWrapper():
         """
         self._policy = policy
         self._sample = sample
-        
+
     def __call__(self, observation):
         batched_observation = tf2_utils.add_batch_dim(observation)
         distribution = self._policy(batched_observation)

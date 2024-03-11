@@ -5,6 +5,10 @@ import socket
 import dataclasses
 import copy
 import logging
+import os
+
+import ray
+import numpy as np
 
 import tensorflow as tf
 import reverb
@@ -52,7 +56,7 @@ class DMPOConfig:
     checkpoint_max_to_keep: Optional[int] = 1  # None: keep all checkpoints.
     checkpoint_directory: str = '~/acme/'
     time_delta_minutes: float = 30
-    terminal: str ='current_terminal'
+    terminal: str = 'current_terminal'
     replay_table_name: str = reverb_adders.DEFAULT_PRIORITY_TABLE
     print_fn: Callable = logging.info
 
@@ -60,8 +64,7 @@ class DMPOConfig:
 class ReplayServer():
     """Reverb replay server, can be used with DMPO agent."""
 
-    def __init__(self,
-                 config: DMPOConfig,
+    def __init__(self, config: DMPOConfig,
                  environment_spec: specs.EnvironmentSpec):
         """Spawn a Reverb server with experience replay tables."""
 
@@ -69,7 +72,8 @@ class ReplayServer():
         if self._config.samples_per_insert is None:
             # We will take a samples_per_insert ratio of None to mean that there is
             # no limit, i.e. this only implies a min size limit.
-            limiter = reverb.rate_limiters.MinSize(self._config.min_replay_size)
+            limiter = reverb.rate_limiters.MinSize(
+                self._config.min_replay_size)
         else:
             # Create enough of an error buffer to give a 10% tolerance in rate.
             samples_per_insert_tolerance = 0.1 * self._config.samples_per_insert
@@ -88,8 +92,7 @@ class ReplayServer():
             signature=reverb_adders.NStepTransitionAdder.signature(
                 environment_spec))
 
-        self._replay_server = reverb.Server(tables=[replay_buffer],
-                                            port=None)
+        self._replay_server = reverb.Server(tables=[replay_buffer], port=None)
         # Get hostname and port of the server.
         hostname = socket.gethostname()
         port = self._replay_server.port
@@ -102,14 +105,15 @@ class ReplayServer():
 class Learner(DistributionalMPOLearner):
     """The Learning part of the DMPO agent."""
 
-    def __init__(self,
-                 replay_server_address: str,
-                 counter: counting.Counter,
-                 environment_spec: specs.EnvironmentSpec,
-                 dmpo_config,
-                 network_factory,
-                 label='learner',
-                ):
+    def __init__(
+        self,
+        replay_server_address: str,
+        counter: counting.Counter,
+        environment_spec: specs.EnvironmentSpec,
+        dmpo_config,
+        network_factory,
+        label='learner',
+    ):
 
         self._config = dmpo_config
         self._reverb_client = reverb.Client(replay_server_address)
@@ -120,7 +124,8 @@ class Learner(DistributionalMPOLearner):
             networks = agent_dmpo.DMPONetworks(
                 policy_network=networks_dict.get('policy'),
                 critic_network=networks_dict.get('critic'),
-                observation_network=networks_dict.get('observation', tf.identity))
+                observation_network=networks_dict.get('observation',
+                                                      tf.identity))
             return networks
 
         # Create the networks to optimize (online) and target networks.
@@ -131,20 +136,20 @@ class Learner(DistributionalMPOLearner):
         target_networks.init(environment_spec)
 
         dataset = self._make_dataset_iterator(self._reverb_client)
-        counter = counting.Counter(parent=counter,
-                                   prefix=label)
+        counter = counting.Counter(parent=counter, prefix=label)
         logger = loggers.make_default_logger(
             label=label,
             time_delta=self._config.log_every,
             steps_key=f'{label}_steps',
-            print_fn=self._config.print_fn, #print_fn #logging.info,
+            print_fn=self._config.print_fn,  #print_fn #logging.info,
             save_data=self._config.logger_save_csv_data)
 
         checkpoint_enable = True  # checkpoint and snapshot the learner (saved in ~/acme/)
 
         # Have to call superclass constructor in this way.
         # Solved with Ray issue:  https://github.com/ray-project/ray/issues/449
-        DistributionalMPOLearner.__init__(self,
+        DistributionalMPOLearner.__init__(
+            self,
             policy_network=online_networks.policy_network,
             critic_network=online_networks.critic_network,
             observation_network=online_networks.observation_network,
@@ -158,8 +163,10 @@ class Learner(DistributionalMPOLearner):
             clipping=self._config.clipping,
             discount=self._config.discount,
             num_samples=self._config.num_samples,
-            target_policy_update_period=self._config.target_policy_update_period,
-            target_critic_update_period=self._config.target_critic_update_period,
+            target_policy_update_period=self._config.
+            target_policy_update_period,
+            target_critic_update_period=self._config.
+            target_critic_update_period,
             dataset=dataset,
             logger=logger,
             counter=counter,
@@ -191,9 +198,10 @@ class Learner(DistributionalMPOLearner):
         """Return Checkpointer and Snapshotter directories."""
         return self._checkpointer._checkpoint_dir, self._snapshotter.directory
 
-    def _make_dataset_iterator(self,
-                               reverb_client: reverb.Client,
-                              ) -> Iterator[reverb.ReplaySample]:
+    def _make_dataset_iterator(
+        self,
+        reverb_client: reverb.Client,
+    ) -> Iterator[reverb.ReplaySample]:
         """Create a dataset iterator to use for learning/updating the agent."""
         # The dataset provides an interface to sample from replay.
         dataset = datasets.make_reverb_dataset(
@@ -207,21 +215,22 @@ class Learner(DistributionalMPOLearner):
 
 class EnvironmentLoop(acme.EnvironmentLoop):
     """Actor and Evaluator class."""
-    
-    def __init__(self,
-                 replay_server_address: str,
-                 variable_source: acme.VariableSource,
-                 counter: counting.Counter,
-                 network_factory,
-                 environment_factory,
-                 dmpo_config,
-                 actor_or_evaluator='actor',
-                 label=None,
-                 ray_head_node_ip: Optional[str] = None,
-                 egl_device_id_head_node: Optional[list] = None,  # ['1', '2', '3']
-                 egl_device_id_worker_node: Optional[list] = None,  # ['0', '1', '2', '3']
-                 # actor_count: Optional[int] = None,
-                ):
+
+    def __init__(
+            self,
+            replay_server_address: str,
+            variable_source: acme.VariableSource,
+            counter: counting.Counter,
+            network_factory,
+            environment_factory,
+            dmpo_config,
+            actor_or_evaluator='actor',
+            label=None,
+            ray_head_node_ip: Optional[str] = None,
+            egl_device_id_head_node: Optional[list] = None,  # ['1', '2', '3']
+            egl_device_id_worker_node: Optional[
+                list] = None,  # ['0', '1', '2', '3']
+    ):
         """The actor process."""
 
         # Maybe adjust EGL_DEVICE_ID environment variable internally in actor.
@@ -229,10 +238,10 @@ class EnvironmentLoop(acme.EnvironmentLoop):
             current_node_id = ray.get_runtime_context().node_id.hex()
             running_on_head_node = False
             for node in ray.nodes():
-                if (node['NodeID'] == current_node_id and
-                    node['NodeManagerAddress'] == ray_head_node_ip):
-                        running_on_head_node = True
-                        break
+                if (node['NodeID'] == current_node_id
+                        and node['NodeManagerAddress'] == ray_head_node_ip):
+                    running_on_head_node = True
+                    break
             if running_on_head_node:
                 # egl_device_id = egl_device_id_head_node[
                 #     actor_count % len(egl_device_id_head_node)]
@@ -261,7 +270,8 @@ class EnvironmentLoop(acme.EnvironmentLoop):
             networks = agent_dmpo.DMPONetworks(
                 policy_network=networks_dict.get('policy'),
                 critic_network=networks_dict.get('critic'),
-                observation_network=networks_dict.get('observation', tf.identity))
+                observation_network=networks_dict.get('observation',
+                                                      tf.identity))
             return networks
 
         # Create the policy network, adder, ...
@@ -286,20 +296,18 @@ class EnvironmentLoop(acme.EnvironmentLoop):
             save_data = self._config.logger_save_csv_data
 
         # Create the agent.
-        actor = self._make_actor(
-            policy_network=policy_network,
-            adder=adder,
-            variable_source=variable_source)
+        actor = self._make_actor(policy_network=policy_network,
+                                 adder=adder,
+                                 variable_source=variable_source)
 
         # Create logger and counter; actors will not spam bigtable.
-        counter = counting.Counter(parent=counter,
-                                   prefix=actor_or_evaluator)
+        counter = counting.Counter(parent=counter, prefix=actor_or_evaluator)
         logger = loggers.make_default_logger(
             label=label,
             save_data=save_data,
             time_delta=self._config.log_every,
             steps_key=actor_or_evaluator + '_steps',
-            print_fn=self._config.print_fn, #print_fn, #logging.info,
+            print_fn=self._config.print_fn,  #print_fn, #logging.info,
         )
 
         super().__init__(environment, actor, counter, logger)
@@ -308,17 +316,20 @@ class EnvironmentLoop(acme.EnvironmentLoop):
         """Dummy method to check if actor is ready."""
         pass
 
-    def _make_actor(self,
-                    policy_network: snt.Module,
-                    adder: Optional[adders.Adder] = None,
-                    variable_source: Optional[core.VariableSource] = None,):
+    def _make_actor(
+        self,
+        policy_network: snt.Module,
+        adder: Optional[adders.Adder] = None,
+        variable_source: Optional[core.VariableSource] = None,
+    ):
         """Create an actor instance."""
         if variable_source:
             # Create the variable client responsible for keeping the actor up-to-date.
             variable_client = variable_utils.VariableClient(
                 client=variable_source,
                 variables={'policy': policy_network.variables},
-                update_period=self._config.actor_update_period,  # was: hard-coded 1000,
+                update_period=self._config.
+                actor_update_period,  # was: hard-coded 1000,
             )
             # Make sure not to use a random policy after checkpoint restoration by
             # assigning variables before running the environment loop.

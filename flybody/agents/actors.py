@@ -1,11 +1,10 @@
 """Acme agent implementations."""
 
-from typing import Optional, Tuple
+from typing import Optional
 
 from acme import adders
 from acme import core
 from acme import types
-# Internal imports.
 from acme.tf import utils as tf2_utils
 from acme.tf import variable_utils as tf2_variable_utils
 
@@ -31,7 +30,7 @@ class DelayedFeedForwardActor(core.Actor):
         adder: Optional[adders.Adder] = None,
         variable_client: Optional[tf2_variable_utils.VariableClient] = None,
         action_delay: Optional[int] = None,
-        ):
+    ):
         """Initializes the actor.
 
         Args:
@@ -60,11 +59,13 @@ class DelayedFeedForwardActor(core.Actor):
         policy = self._policy_network(batched_observation)
 
         # Sample from the policy if it is stochastic.
-        action = policy.sample() if isinstance(policy, tfd.Distribution) else policy
+        action = policy.sample() if isinstance(policy,
+                                               tfd.Distribution) else policy
 
         return action
 
-    def select_action(self, observation: types.NestedArray) -> types.NestedArray:
+    def select_action(self,
+                      observation: types.NestedArray) -> types.NestedArray:
         # Pass the observation through the policy network.
         action = self._policy(observation)
 
@@ -84,7 +85,8 @@ class DelayedFeedForwardActor(core.Actor):
         if self._adder:
             self._adder.add_first(timestep)
 
-    def observe(self, action: types.NestedArray, next_timestep: dm_env.TimeStep):
+    def observe(self, action: types.NestedArray,
+                next_timestep: dm_env.TimeStep):
         if self._adder:
             self._adder.add(action, next_timestep)
 
