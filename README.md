@@ -9,7 +9,7 @@
 
 ## Getting started
 
-The quickest way to get started is to take a look at an introductory tutorial [notebook](https://github.com/TuragaLab/flybody/blob/main/notebooks/getting-started.ipynb) or <a target="_blank" href="https://colab.research.google.com/github/TuragaLab/flybody/blob/main/notebooks/getting-started.ipynb">
+The quickest way to get started is to take a look at an introductory tutorial [notebook](https://github.com/TuragaLab/flybody/blob/main/docs/getting-started.ipynb) or <a target="_blank" href="https://colab.research.google.com/github/TuragaLab/flybody/blob/main/docs/getting-started.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
