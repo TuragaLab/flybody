@@ -8,6 +8,32 @@ import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 
 
+def rollout_and_render(env, policy, n_steps=100,
+                       run_until_termination=False,
+                       camera_ids=[-1],
+                       **render_kwargs):
+    """Rollout policy for n_steps or until termination, and render video.
+    Rendering is possible from multiple cameras; in that case, each element in
+    returned `frames` is a list of cameras."""
+    if isinstance(camera_ids, int):
+        camera_ids = [camera_ids]
+    timestep = env.reset()
+    frames = []
+    i = 0
+    while ((i < n_steps and not run_until_termination) or 
+           (timestep.step_type != 2 and run_until_termination)):
+        i += 1
+        frame = []
+        for camera_id in camera_ids:
+            frame.append(
+                env.physics.render(camera_id=camera_id, **render_kwargs))
+        frame = frame[0] if len(camera_ids) == 1 else frame  # Maybe squeeze.
+        frames.append(frame)
+        action = policy(timestep.observation)
+        timestep = env.step(action)
+    return frames
+
+
 def any_substr_in_str(substrings: Sequence[str], string: str) -> bool:
     """Checks if any of substrings is in string."""
     return any(s in string for s in substrings)
