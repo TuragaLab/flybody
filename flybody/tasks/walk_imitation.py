@@ -45,6 +45,7 @@ class WalkImitation(Walking):
         self._trajectory_sites = trajectory_sites
         self._max_episode_steps = round(
             self._time_limit / self.control_timestep) + 1
+        self._next_traj_idx = None
 
         # Get mocap joints.
         self._mocap_joints = [self._root_joint]
@@ -76,11 +77,18 @@ class WalkImitation(Walking):
         self._walker.observables.add_observable('ref_root_quat',
                                                 self.ref_root_quat)
 
+    def set_next_trajectory_index(self, idx):
+        """In the next episode (only), this requested trajectory will be used.
+        Could be used for testing, debugging."""
+        self._next_traj_idx = idx
+
     def initialize_episode_mjcf(self, random_state: np.random.RandomState):
         super().initialize_episode_mjcf(random_state)
 
         # Pick walking snippet (get snippet dict).
-        self._snippet = self._traj_generator.get_trajectory()
+        self._snippet = self._traj_generator.get_trajectory(
+            traj_idx=self._next_traj_idx)
+        self._next_traj_idx = None  # Reset if wasn't None.
 
         # Update reference trajectory for tracking observables.
         self._ref_qpos = self._snippet['qpos']

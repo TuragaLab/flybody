@@ -64,7 +64,7 @@ class FruitFlyTask(composer.Task, ABC):
       stroke_plane_angle: Angle of wing stroke plane for initial flight pose,
         relative to ground, degrees. 0: horizontal stroke plane.
       add_ghost: Whether to add ghost fly to arena.
-      ghost_visible_legs: Whether to hide ghost legs.
+      ghost_visible_legs: Whether to show or hide ghost legs.
       ghost_offset: Shift ghost by this vector for better visualizations.
         In observables, the ghost is kept at its original position.
       num_user_actions: Optional, number of additional actions for custom usage,
