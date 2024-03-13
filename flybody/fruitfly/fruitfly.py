@@ -128,7 +128,7 @@ class FruitFly(legacy_base.Walker):
         use_mouth: bool = False,
         use_antennae: bool = False,
         joint_filter: float = 0.01,
-        adhesion_filter: float = 0.01,
+        adhesion_filter: float = 0.007,
         body_pitch_angle: float = 47.5,
         stroke_plane_angle: float = 0.,
         physics_timestep: float = 1e-4,
@@ -357,7 +357,7 @@ class FruitFly(legacy_base.Walker):
             'walker/thorax']  # gram.
         self._weight = np.linalg.norm(physics.model.opt.gravity) * body_mass
         # Fold wings if not used.
-        if not self._use_wings:
+        if not self._use_wings and self.name == 'walker':
             for s in ['left', 'right']:
                 for dof in ['yaw', 'roll', 'pitch']:
                     j = f'walker/wing_{dof}_{s}'
