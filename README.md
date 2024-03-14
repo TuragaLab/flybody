@@ -81,4 +81,15 @@ Follow these steps to install `flybody`:
 3. You may want to run `pytest` to test the main aspects of the `flybody` installation.
 
 ## Citing `flybody`
-Coming soon
+```
+@article{flybody,
+         title = {Whole-body simulation of realistic fruit fly locomotion with deep reinforcement learning},
+         author = {Roman Vaxenburg and Igor Siwanowicz and Josh Merel and Alice A Robie and Carmen Morrow and
+                   Guido Novati and Zinovia Stefanidi and Gwyneth M Card and Michael B Reiser and
+                   Matthew M Botvinick and Kristin M Branson and Yuval Tassa and Srinivas C Turaga},
+         journal = {bioRxiv},
+         doi = {https://doi.org/10.1101/2024.03.11.584515},
+         url = {https://www.biorxiv.org/content/10.1101/2024.03.11.584515},
+         year = {2024}
+}
+```
