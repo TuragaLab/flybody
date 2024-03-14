@@ -6,7 +6,7 @@
 ![python versions](https://github.com/TuragaLab/flybody/actions/workflows/pyversions.yml/badge.svg)
 ![lint](https://github.com/TuragaLab/flybody/actions/workflows/lint.yml/badge.svg)
 
-`flybody` is an anatomically-detailed body model of the fruit fly _Drosophila melanogaster_ for MuJoCo physics simulator and reinforcement learning applications. The fly model was developed in a collaborative effort by Google DeepMind and HHMI Janelia Research Campus. We envision our model as a platform for fruit fly biophysics simulations and for modeling neural control of sensorimotor behavior in an embodied context.
+`flybody` is an anatomically-detailed body model of the fruit fly _Drosophila melanogaster_ for MuJoCo physics simulator and reinforcement learning applications. The fly model was developed in a collaborative effort by Google DeepMind and HHMI Janelia Research Campus. We envision our model as a platform for fruit fly biophysics simulations and for modeling neural control of sensorimotor behavior in an embodied context. See our accompanying [publication](https://www.biorxiv.org/content/10.1101/2024.03.11.584515).
 
 ## Getting started
 
@@ -82,14 +82,17 @@ Follow these steps to install `flybody`:
 
 ## Citing `flybody`
 ```
-@article{flybody,
-         title = {Whole-body simulation of realistic fruit fly locomotion with deep reinforcement learning},
-         author = {Roman Vaxenburg and Igor Siwanowicz and Josh Merel and Alice A Robie and Carmen Morrow and
-                   Guido Novati and Zinovia Stefanidi and Gwyneth M Card and Michael B Reiser and
-                   Matthew M Botvinick and Kristin M Branson and Yuval Tassa and Srinivas C Turaga},
-         journal = {bioRxiv},
-         doi = {https://doi.org/10.1101/2024.03.11.584515},
-         url = {https://www.biorxiv.org/content/10.1101/2024.03.11.584515},
-         year = {2024}
+@article{
+  flybody,
+  title = {Whole-body simulation of realistic fruit fly locomotion with
+           deep reinforcement learning},
+  author = {Roman Vaxenburg and Igor Siwanowicz and Josh Merel and Alice A Robie and
+            Carmen Morrow and Guido Novati and Zinovia Stefanidi and Gwyneth M Card and
+            Michael B Reiser and Matthew M Botvinick and Kristin M Branson and
+            Yuval Tassa and Srinivas C Turaga},
+  journal = {bioRxiv},
+  doi = {https://doi.org/10.1101/2024.03.11.584515},
+  url = {https://www.biorxiv.org/content/10.1101/2024.03.11.584515},
+  year = {2024},
 }
 ```
