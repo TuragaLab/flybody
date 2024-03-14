@@ -1,10 +1,76 @@
 """Utils for fly tasks."""
 # ruff: noqa: F821
 
-from typing import Sequence
+from typing import Sequence, Callable, Any
 import numpy as np
 
 from flybody.quaternions import rotate_vec_with_quat
+
+
+def get_random_policy(action_spec: 'dm_env.specs.BoundedArray',
+                      minimum: float = -0.2,
+                      maximum: float = 0.2) -> Callable[[Any], np.ndarray]:
+    """Returns dummy policy generating random actions."""
+    def random_policy(observation):
+        del observation  # Not used by random_policy.
+        return np.random.uniform(minimum, maximum, action_spec.shape)
+    return random_policy
+
+
+def real2canonical(action: np.ndarray,
+                   action_spec: 'acme.types.NestedSpec',
+                   clip: bool = True) -> np.ndarray:
+    """Transform action of real (not wrapped) environment to canonical
+    representation in range [-1, 1].
+    
+    Any number of leading batch dimensions is supported.
+    
+    Args:
+        action: Action in real (not wrapped) environment, shape (B, D).
+                D is the dimensionality of action space (action size).
+        action_spec: Action spec of real (not wrapped) environment.
+        clip: Whether to clip action to limits specified in action_spec.
+        
+    Returns:
+        canonical_action: Action in canonical representation, (B, D).
+    """
+    assert action.shape[-1] == action_spec.shape[0]
+    if clip:
+        action = np.clip(action, action_spec.minimum, action_spec.maximum)
+    scale = action_spec.maximum - action_spec.minimum
+    offset = action_spec.minimum
+    canonical_action = action - offset
+    canonical_action /= 0.5 * scale
+    canonical_action -= 1.
+    return canonical_action
+
+
+def canonical2real(action: np.ndarray,
+                   action_spec: 'acme.types.NestedSpec',
+                   clip: bool = True) -> np.ndarray:
+    """Transform action in canonical representation in range [-1, 1] to
+    action in real (not wrapped) environment.
+    
+    Any number of leading batch dimensions is supported.
+    
+    Args:
+        action: Action in canonical representation, (B, D).
+                D is the dimensionality of action space (action size).
+        action_spec: Action spec of real (not wrapped) environment.
+        clip: Whether to clip action to canonical limits [-1, 1].
+        
+    Returns:
+        real_action: Action in real (not wrapped) environment, (B, D).
+    """
+    assert action.shape[-1] == action_spec.shape[0]
+    if clip:
+        action = np.clip(action, -1, 1)
+    scale = action_spec.maximum - action_spec.minimum
+    offset = action_spec.minimum
+    real_action = 0.5 * (action + 1)  # Now in range [0, 1].
+    real_action *= scale
+    real_action += offset    
+    return real_action
 
 
 def make_ghost_fly(walker, visible=True, visible_legs=True):
