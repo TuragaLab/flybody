@@ -22,7 +22,7 @@ if 'MUJOCO_GL' in os.environ and os.environ['MUJOCO_GL'] == 'egl':
 
 # Prepare all possible configurations to test fly walker with.
 uses = [(i, j, k, l) for i in range(2) for j in range(2)
-                     for k in range(2) for l in range(2)]
+                     for k in range(2) for l in range(2)]  # noqa: E741
 filters = [(0, 0), (JOINT_FILTER, 0), (0, ADHESION_FILTER), 
            (JOINT_FILTER, ADHESION_FILTER)]
 user_actions = [0, 1, 2]
