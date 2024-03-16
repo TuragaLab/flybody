@@ -14,7 +14,7 @@ from flybody.tasks.base import Flying
 
 
 class FlightImitationWBPG(Flying):
-    """WBPG-based CoM-only tracking"""
+    """WBPG-based flight tracking task."""
 
     def __init__(self,
                  wbpg: WingBeatPatternGenerator,
@@ -22,17 +22,17 @@ class FlightImitationWBPG(Flying):
                  terminal_com_dist: float = 2.0,
                  trajectory_sites: bool = True,
                  **kwargs):
-        """Task of learning a policy for flying and maneuvering while using a wing
-    beat pattern generator with controllable wing beat frequency.
+        """Task of learning a policy for flying and maneuvering while using a
+        wing beat pattern generator with controllable wing beat frequency.
 
-    Args:
-      wbpg: Wing beat pattern generator for generating wing beat patterns.
-      traj_generator: Trajectory generator for generating flight trajectories.
-      terminal_com_dist: Episode will be terminated when CoM distance from model
-        to ghost exceeds terminal_com_dist.
-      trajectory_sites: Whether to render trajectory sites.
-      **kwargs: Arguments passed to the superclass constructor.
-    """
+        Args:
+            wbpg: Wing beat pattern generator for generating wing beat patterns.
+            traj_generator: Trajectory generator for generating flight trajectories.
+            terminal_com_dist: Episode will be terminated when CoM distance from
+                model to ghost exceeds terminal_com_dist.
+            trajectory_sites: Whether to render trajectory sites.
+            **kwargs: Arguments passed to the superclass constructor.
+        """
 
         super().__init__(add_ghost=True, num_user_actions=1, **kwargs)
 
@@ -75,8 +75,8 @@ class FlightImitationWBPG(Flying):
 
     def set_next_trajectory_index(self, idx):
         """In the next episode (only), this requested trajectory will be used.
-    Could be used for testing, debugging.
-    """
+        Could be used for testing, debugging.
+        """
         self._next_traj_idx = idx
 
     def initialize_episode_mjcf(self, random_state: np.random.RandomState):
@@ -115,9 +115,9 @@ class FlightImitationWBPG(Flying):
                            random_state: np.random.RandomState):
         """Randomly select a starting point and set the walker.
 
-    Environment call sequence:
-        check_termination, get_reward_factors, get_discount
-    """
+        Environment call sequence:
+            check_termination, get_reward_factors, get_discount
+        """
         super().initialize_episode(physics, random_state)
 
         ghost_qpos = self._ref_qpos[0, :] + np.hstack(
