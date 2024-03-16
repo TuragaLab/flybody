@@ -164,13 +164,17 @@ class FruitFlyTask(composer.Task, ABC):
         if hasattr(self._arena, 'regenerate'):
             self._arena.regenerate(random_state)
         # Better visual defaults for CGS units.
+        # Important: these particular values of znear, zfar, extent are
+        # critical for the visually-guided flight task.
         self.root_entity.mjcf_model.visual.map.znear = 0.001
+        self.root_entity.mjcf_model.visual.map.zfar = 50.0
         self.root_entity.mjcf_model.visual.map.force = 0.00001
         self.root_entity.mjcf_model.visual.scale.framewidth = 0.06
         self.root_entity.mjcf_model.visual.scale.forcewidth = 0.06
-        self.root_entity.mjcf_model.visual.scale.contactwidth = 0.06 * 5
-        self.root_entity.mjcf_model.visual.scale.contactheight = 0.02 * 5
+        self.root_entity.mjcf_model.visual.scale.contactwidth = 0.3
+        self.root_entity.mjcf_model.visual.scale.contactheight = 0.1
         self.root_entity.mjcf_model.visual.scale.jointwidth = 0.06
+        self.root_entity.mjcf_model.statistic.extent = 4.01
 
     def initialize_episode(self, physics, random_state):
         # Reset control timestep counter.
