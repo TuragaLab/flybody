@@ -45,38 +45,38 @@ class FruitFlyTask(composer.Task, ABC):
         future_steps: int = 0,
         initialize_qvel: bool = False,
     ):
-        """Construct a fruitfly_v2 task.
+        """Construct a fruitfly task.
 
-    Args:
-      walker: Walker constructor to be used.
-      arena: Arena to be used.
-      use_legs: Whether the legs are active.
-      use_wings: Whether the wings are active.
-      use_mouth: Whether the mouth is active.
-      use_antennae: Whether the antennae are active.
-      physics_timestep: Physics timestep to use for simulation.
-      control_timestep: Control timestep.
-      joint_filter: Timescale of filter for joint actuators. 0: disabled.
-      adhesion_filter: Timescale of filter for adhesion actuators. 0: disabled.
-      body_pitch_angle: Body pitch angle for initial flight pose, relative to
-        ground, degrees. 0: horizontal body position. Default value from
-        https://doi.org/10.1126/science.1248955
-      stroke_plane_angle: Angle of wing stroke plane for initial flight pose,
-        relative to ground, degrees. 0: horizontal stroke plane.
-      add_ghost: Whether to add ghost fly to arena.
-      ghost_visible_legs: Whether to show or hide ghost legs.
-      ghost_offset: Shift ghost by this vector for better visualizations.
-        In observables, the ghost is kept at its original position.
-      num_user_actions: Optional, number of additional actions for custom usage,
-        e.g. in before_step callback. The action range is [-1, 1]. 0: Not used.
-      eye_camera_fovy: Vertical field of view of the eye cameras, degrees.
-      eye_camera_size: Size in pixels (height and width) of the eye cameras.
-        Height and width are assumed equal.
-      future_steps: Number of future steps of reference trajectory to provide
-        as observables. Zero means only the current step is used.
-      initialize_qvel: whether to init qvel of root or not (wings are always vel
-        inited)
-    """
+        Args:
+        walker: Walker constructor to be used.
+        arena: Arena to be used.
+        use_legs: Whether the legs are active.
+        use_wings: Whether the wings are active.
+        use_mouth: Whether the mouth is active.
+        use_antennae: Whether the antennae are active.
+        physics_timestep: Physics timestep to use for simulation.
+        control_timestep: Control timestep.
+        joint_filter: Timescale of filter for joint actuators. 0: disabled.
+        adhesion_filter: Timescale of filter for adhesion actuators. 0: disabled.
+        body_pitch_angle: Body pitch angle for initial flight pose, relative to
+            ground, degrees. 0: horizontal body position. Default value from
+            https://doi.org/10.1126/science.1248955
+        stroke_plane_angle: Angle of wing stroke plane for initial flight pose,
+            relative to ground, degrees. 0: horizontal stroke plane.
+        add_ghost: Whether to add ghost fly to arena.
+        ghost_visible_legs: Whether to show or hide ghost legs.
+        ghost_offset: Shift ghost by this vector for better visualizations.
+            In observables, the ghost is kept at its original position.
+        num_user_actions: Optional, number of additional actions for custom usage,
+            e.g. in before_step callback. The action range is [-1, 1]. 0: Not used.
+        eye_camera_fovy: Vertical field of view of the eye cameras, degrees.
+        eye_camera_size: Size in pixels (height and width) of the eye cameras.
+            Height and width are assumed equal.
+        future_steps: Number of future steps of reference trajectory to provide
+            as observables. Zero means only the current step is used.
+        initialize_qvel: whether to init qvel of root or not (wings are always vel
+            inited)
+        """
         self._time_limit = time_limit
         self._initialize_qvel = initialize_qvel
 
@@ -231,30 +231,26 @@ class FruitFlyTask(composer.Task, ABC):
     @composer.observable
     def ref_displacement(self):
         """Reference displacement vectors in fly's egocentric reference frame,
-    possibly with preview of future timesteps.
-    """
-
+        possibly with preview of future timesteps.
+        """
         def get_ref_displacement(physics: 'mjcf.Physics'):
             fly_pos, _ = self._walker.get_pose(physics)
             ref_pos = self._ref_qpos[self._step_counter:self._step_counter +
                                      self._future_steps + 1, :3]
             return self._walker.transform_vec_to_egocentric_frame(
                 physics, ref_pos - fly_pos)
-
         return observable.Generic(get_ref_displacement)
 
     @composer.observable
     def ref_root_quat(self):
         """Reference root quaternions in fly's egocentric reference frame,
-    possibly with preview of future timesteps.
-    """
-
+        possibly with preview of future timesteps.
+        """
         def get_root_quat(physics: 'mjcf.Physics'):
             ref_quat = self._ref_qpos[self._step_counter:self._step_counter +
                                       self._future_steps + 1, 3:7]
             _, fly_quat = self._walker.get_pose(physics)
             return get_dquat_local(fly_quat, ref_quat)
-
         return observable.Generic(get_root_quat)
 
 
@@ -272,14 +268,14 @@ class Flying(FruitFlyTask):
     ):
         """Base class for setting fly model configuration for flight tasks.
 
-    Args:
-      wing_gainprm: Gain parameter for wing actuators, [yaw, roll, pitch].
-      wing_stiffness: Stiffness of wing joints.
-      wing_damping: Damping of wing joints.
-      fluidcoef: Parameters for new MuJoCo fluid model.
-      floor_contacts: Whether to use collision detection with floor.
-      **kwargs: Arguments passed to the superclass constructor.
-    """
+        Args:
+            wing_gainprm: Gain parameter for wing actuators, [yaw, roll, pitch].
+            wing_stiffness: Stiffness of wing joints.
+            wing_damping: Damping of wing joints.
+            fluidcoef: Parameters for new MuJoCo fluid model.
+            floor_contacts: Whether to use collision detection with floor.
+            **kwargs: Arguments passed to the superclass constructor.
+        """
         super().__init__(use_legs=False,
                          use_wings=True,
                          use_mouth=False,
@@ -335,9 +331,9 @@ class Walking(FruitFlyTask):
     ):
         """Base class for setting fly model configuration for walking tasks.
 
-    Args:
-      **kwargs: Arguments passed to the superclass constructor.
-    """
+        Args:
+            **kwargs: Arguments passed to the superclass constructor.
+        """
 
         super().__init__(use_legs=True,
                          use_wings=False,
