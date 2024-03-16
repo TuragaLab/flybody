@@ -26,15 +26,15 @@ def flight_imitation(wpg_pattern_path: str,
     """Requires a fruitfly to track a flying reference.
   
     Args:
-      wpg_pattern_path: Path to baseline wing beat pattern for WPG.
-      ref_path: Path to reference trajectory dataset.
-      random_state: Random state for reproducibility.
-      terminal_com_dist: Episode will be terminated when distance from model
-          CoM to ghost CoM exceeds terminal_com_dist. Can be float('inf').
+        wpg_pattern_path: Path to baseline wing beat pattern for WPG.
+        ref_path: Path to reference trajectory dataset.
+        random_state: Random state for reproducibility.
+        terminal_com_dist: Episode will be terminated when distance from model
+            CoM to ghost CoM exceeds terminal_com_dist. Can be float('inf').
 
     Returns:
-      Environment for flight tracking task.
-  """
+        Environment for flight tracking task.
+    """
     # Build a fruitfly walker and arena.
     walker = fruitfly.FruitFly
     arena = floors.Floor()
@@ -66,13 +66,13 @@ def walk_imitation(ref_path: str,
     """Requires a fruitfly to track a reference walking fly.
 
     Args:
-      ref_path: Path to reference trajectory dataset.
-      random_state: Random state for reproducibility.
-      terminal_com_dist: Episode will be terminated when distance from model
-          CoM to ghost CoM exceeds terminal_com_dist. Can be float('inf').
+        ref_path: Path to reference trajectory dataset.
+        random_state: Random state for reproducibility.
+        terminal_com_dist: Episode will be terminated when distance from model
+            CoM to ghost CoM exceeds terminal_com_dist. Can be float('inf').
     Returns:
-      Environment for walking tracking task.
-  """
+        Environment for walking tracking task.
+    """
     # Build a fruitfly walker and arena.
     walker = fruitfly.FruitFly
     arena = floors.Floor()
@@ -101,11 +101,11 @@ def walk_on_ball(random_state: np.random.RandomState = None):
     """Requires a tethered fruitfly to walk on a floating ball.
 
     Args:
-      random_state: Random state for reproducibility.
+        random_state: Random state for reproducibility.
 
     Returns:
-      Environment for fly walking on ball.
-  """
+        Environment for fly walking on ball.
+    """
     # Build a fruitfly walker and arena.
     walker = fruitfly.FruitFly
     arena = BallFloor(ball_pos=(-0.05, 0, -0.419),
@@ -132,15 +132,15 @@ def vision_guided_flight(wpg_pattern_path: str,
                          **kwargs_arena):
     """Vision-guided flight tasks: 'bumps' and 'trench'.
 
-  Args:
-    wpg_pattern_path: Path to baseline wing beat pattern for WPG.
-    bumps_or_trench: Whether to create 'bumps' or 'trench' vision task.
-    random_state: Random state for reproducibility.
-    kwargs_arena: kwargs to be passed on to arena.
+    Args:
+        wpg_pattern_path: Path to baseline wing beat pattern for WPG.
+        bumps_or_trench: Whether to create 'bumps' or 'trench' vision task.
+        random_state: Random state for reproducibility.
+        kwargs_arena: kwargs to be passed on to arena.
 
-  Returns:
-    Environment for vision-guided flight task.
-  """
+    Returns:
+        Environment for vision-guided flight task.
+    """
 
     if bumps_or_trench == 'bumps':
         arena = SineBumps
