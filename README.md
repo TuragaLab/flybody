@@ -12,11 +12,14 @@ The fly model was developed in a collaborative effort by Google DeepMind and HHM
 
 We envision our model as a platform for fruit fly biophysics simulations and for modeling neural control of sensorimotor behavior in an embodied context; see our accompanying [publication](https://www.biorxiv.org/content/10.1101/2024.03.11.584515).
 
-## Getting started
+## Getting Started
 
 The quickest way to get started is to take a look at an introductory [tutorial notebook](https://github.com/TuragaLab/flybody/blob/main/docs/getting-started.ipynb) or <a target="_blank" href="https://colab.research.google.com/github/TuragaLab/flybody/blob/main/docs/getting-started.ipynb">
-  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a> <br>
-Also, [this notebook](https://github.com/TuragaLab/flybody/blob/main/docs/fly-env-examples.ipynb) shows examples of the flight imitation, walking imitation, and vision-guided flight RL task environments.
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
+
+Also, [this notebook](https://github.com/TuragaLab/flybody/blob/main/docs/fly-env-examples.ipynb) shows examples of the flight imitation, walking imitation, and vision-guided flight RL task environments. 
+
+To train the fly, take a look at the [distributed RL training script](https://github.com/TuragaLab/flybody/blob/main/flybody/train_dmpo_ray.py), which uses Ray to parallelize the DMPO agent training.
 
 ## Installation
 
@@ -83,7 +86,7 @@ Follow these steps to install `flybody`:
    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/your/path/to/miniconda3/envs/flybody/lib
    ```
 
-3. You may want to run `pytest` to test the main aspects of the `flybody` installation.
+3. You may want to run `pytest` to test the main components of the `flybody` installation.
 
 ## Citing `flybody`
 ```
@@ -101,3 +104,4 @@ Follow these steps to install `flybody`:
   year = {2024},
 }
 ```
+Thank you for your interest in our fly model:)
