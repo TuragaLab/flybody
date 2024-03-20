@@ -9,11 +9,11 @@ from flybody.tasks.constants import (_WING_PARAMS, _FLY_CONTROL_TIMESTEP)
 class WingBeatPatternGenerator():
     """Class for controllable frequency-modulation of cyclic wing beat data.
 
-  This class generates wing beat patterns at beat frequencies requested by
-  the agent and supports seamless switching from one frequency to another
-  while maintaining the wing beat phase. As input, this class requires only
-  one cycle of wing beat data.
-  """
+    This class generates wing beat patterns at beat frequencies requested by
+    the agent and supports seamless switching from one frequency to another
+    while maintaining the wing beat phase. As input, this class requires only
+    one cycle of wing beat data.
+    """
 
     def __init__(
         self,
@@ -28,26 +28,26 @@ class WingBeatPatternGenerator():
     ):
         """Initialize and construct wing sequencies at different flapping freqs.
 
-    Args:
-      base_pattern_path: Path to one cycle of 'base' wing kinematic data,
-        a np.array of shape (timesteps, 3). The order of wing joints is
-        yaw, roll, pitch. Sampling frequency does not have to match dt_ctrl.
-      base_beat_freq: Mean beat frequency for the requested range of
-        frequencies, Hz.
-      rel_freq_range: Relative frequency range. For example, 0.1 means
-        frequencies in the range base_beat_freq +/- 10%.
-      num_freqs: How many discrete frequencies to generate in the range.
-      min_repeats: Maximum number of allowed base_pattern repeats at
-        each individual frequency. Larger min_repeats allows
-        maintaining perfect connection between repeated wing beat
-        cycles longer.
-      max_repeats: Maximum number of allowed base_pattern repeats at
-        each individual frequency. Larger max_repeats allows finding
-        smoother connection of previous beat cycles to the next ones.
-      dt_ctrl: Wing control timestep, seconds.
-      ctrl_filter: Time constant of control signal filter, seconds.
-        0: not used.
-    """
+        Args:
+          base_pattern_path: Path to one cycle of 'base' wing kinematic data,
+              a np.array of shape (timesteps, 3). The order of wing joints is
+              yaw, roll, pitch. Sampling frequency does not have to match dt_ctrl.
+          base_beat_freq: Mean beat frequency for the requested range of
+              frequencies, Hz.
+          rel_freq_range: Relative frequency range. For example, 0.1 means
+              frequencies in the range base_beat_freq +/- 10%.
+          num_freqs: How many discrete frequencies to generate in the range.
+          min_repeats: Maximum number of allowed base_pattern repeats at
+              each individual frequency. Larger min_repeats allows
+              maintaining perfect connection between repeated wing beat
+              cycles longer.
+          max_repeats: Maximum number of allowed base_pattern repeats at
+              each individual frequency. Larger max_repeats allows finding
+              smoother connection of previous beat cycles to the next ones.
+          dt_ctrl: Wing control timestep, seconds.
+          ctrl_filter: Time constant of control signal filter, seconds.
+              0: not used.
+        """
         # Load base pattern for WBPG, shape (timesteps, 3).
         with open(base_pattern_path, 'rb') as f:
             base_pattern = np.load(f)
@@ -125,16 +125,16 @@ class WingBeatPatternGenerator():
               return_qvel: bool = False) -> np.ndarray:
         """Reset wing sequence to step 0 and set initial phase.
 
-    Args:
-      ctrl_freq: Optional, starting beat frequency, Hz. If not provided,
-        base_beat_freq is used instead.
-      initial_phase: Optional, initial phase within the beat cycle,
-        in range [0, 1].
-      return_qvel: Whether to return initial wing joint qvel.
+        Args:
+          ctrl_freq: Optional, starting beat frequency, Hz. If not provided,
+            base_beat_freq is used instead.
+          initial_phase: Optional, initial phase within the beat cycle,
+            in range [0, 1].
+          return_qvel: Whether to return initial wing joint qvel.
 
-    Returns:
-      Initial set of wing kinematic angles, shape (n_wing_angles,).
-    """
+        Returns:
+          Initial set of wing kinematic angles, shape (n_wing_angles,).
+        """
         if ctrl_freq is None:
             self._ctrl_freq = self.base_beat_freq
         else:
@@ -159,12 +159,12 @@ class WingBeatPatternGenerator():
     def step(self, ctrl_freq: float) -> np.ndarray:
         """Step and return the next set of wing angles. Maybe change beat freq.
 
-    Args:
-      ctrl_freq: New beat frequency to switch to, or keep current one.
+        Args:
+          ctrl_freq: New beat frequency to switch to, or keep current one.
 
-    Returns:
-      Next set of wing kinematic angles, shape (n_wing_angles,).
-    """
+        Returns:
+          Next set of wing kinematic angles, shape (n_wing_angles,).
+        """
         self._step = (self._step + 1) % self._cycle_len
 
         # Maybe apply control filter.

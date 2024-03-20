@@ -10,16 +10,16 @@ def compute_diffs(walker_features: Dict[str, np.ndarray],
                   reference_features: Dict[str, np.ndarray],
                   n: int = 2) -> Dict[str, float]:
     """Computes sums of absolute values of differences between components of
-  model and reference features.
+    model and reference features.
 
-  Args:
-    model_features, reference_features: Dictionaries of features to compute
-      differences of.
-    n: Exponent for differences. E.g., for squared differences use n = 2.
+    Args:
+        model_features, reference_features: Dictionaries of features to compute
+            differences of.
+        n: Exponent for differences. E.g., for squared differences use n = 2.
 
-  Returns:
-    Dictionary of differences, one value for each entry of input dictionary.
-  """
+    Returns:
+        Dictionary of differences, one value for each entry of input dictionary.
+    """
     diffs = {}
     for k in walker_features:
         if 'quat' not in k:
@@ -86,17 +86,17 @@ def reward_factors_deep_mimic(walker_features,
                               std=None,
                               weights=(1, 1, 1, 1)):
     """Returns four reward factors, each of which is a product of individual
-  (unnormalized) Gaussian distributions evaluated for the four model
-  and reference data features:
-    1. Cartesian center-of-mass position, qpos[:3].
-    2. qvel for all joints, including the root joint.
-    3. Egocentric end-effector vectors.
-    4. All joint orientation quaternions (in egocentric local reference
-       frame), and the root quaternion.
+    (unnormalized) Gaussian distributions evaluated for the four model
+    and reference data features:
+        1. Cartesian center-of-mass position, qpos[:3].
+        2. qvel for all joints, including the root joint.
+        3. Egocentric end-effector vectors.
+        4. All joint orientation quaternions (in egocentric local reference
+          frame), and the root quaternion.
 
-  The reward factors are equivalent to the ones in the DeepMimic:
-  https://arxiv.org/abs/1804.02717
-  """
+    The reward factors are equivalent to the ones in the DeepMimic:
+    https://arxiv.org/abs/1804.02717
+    """
     if std is None:
         # Default values for fruitfly walking imitation task.
         std = {
