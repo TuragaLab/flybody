@@ -14,10 +14,10 @@ class TemplateTask(Walking):
     def __init__(self, claw_friction: Optional[float] = 1.0, **kwargs):
         """Template class for walking fly tasks.
 
-    Args:
-      claw_friction: Friction of claw geoms with floor.
-      **kwargs: Arguments passed to the superclass constructor.
-    """
+        Args:
+            claw_friction: Friction of claw geoms with floor.
+            **kwargs: Arguments passed to the superclass constructor.
+        """
 
         super().__init__(add_ghost=False, ghost_visible_legs=False, **kwargs)
 

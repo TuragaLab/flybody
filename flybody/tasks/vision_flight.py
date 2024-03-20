@@ -27,21 +27,21 @@ class VisionFlightImitationWBPG(Flying):
                  init_pos_x_range: Optional[tuple] = (-5, -5),
                  init_pos_y_range: Optional[tuple] = (0, 0),
                  **kwargs):
-        """Task of learning a policy for flying and maneuvering while using a wing
-    beat pattern generator with controllable wing beat frequency.
+        """Task of learning a policy for flying and maneuvering while using a
+            wing beat pattern generator with controllable wing beat frequency.
 
-    Args:
-      wpg: Wing beat generator.
-      floor_contacts_fatal: Whether to terminate the episode when the fly
-        contacts the floor.
-      eye_camera_fovy: Field of view of the eye camera.
-      eye_camera_size: Size of the eye camera.
-      target_height_range: Range of target height.
-      target_speed_range: Range of target speed.
-      init_pos_x_range: Range of initial x position.
-      init_pos_y_range: Range of initial y position.
-      **kwargs: Arguments passed to the superclass constructor.
-    """
+        Args:
+            wpg: Wing beat generator.
+            floor_contacts_fatal: Whether to terminate the episode when the fly
+                contacts the floor.
+            eye_camera_fovy: Field of view of the eye camera.
+            eye_camera_size: Size of the eye camera.
+            target_height_range: Range of target height.
+            target_speed_range: Range of target speed.
+            init_pos_x_range: Range of initial x position.
+            init_pos_y_range: Range of initial y position.
+            **kwargs: Arguments passed to the superclass constructor.
+        """
 
         super().__init__(add_ghost=False,
                          num_user_actions=1,
@@ -110,9 +110,9 @@ class VisionFlightImitationWBPG(Flying):
                            random_state: np.random.RandomState):
         """Randomly selects a starting point and set the walker.
 
-    Environment call sequence:
-        check_termination, get_reward_factors, get_discount
-    """
+        Environment call sequence:
+            check_termination, get_reward_factors, get_discount
+        """
         super().initialize_episode(physics, random_state)
 
         init_x = random_state.uniform(*self._init_pos_x_range)
@@ -252,9 +252,7 @@ class VisionFlightImitationWBPG(Flying):
     @composer.observable
     def task_input(self):
         """Task-specific input, framed as an observable."""
-
         def get_task_input(physics: 'mjcf.Physics'):
             del physics
             return np.hstack([self._target_height, self._target_speed])
-
         return observable.Generic(get_task_input)

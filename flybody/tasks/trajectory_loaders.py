@@ -16,12 +16,12 @@ class HDF5TrajectoryLoader(ABC):
                  random_state: Optional[np.random.RandomState] = None):
         """Initializes the base trajectory loader.
 
-    Args:
-      path: Path to hdf5 dataset file with reference rajectories.
-      traj_indices: List of trajectory indices to use, e.g. for train/test
-        splitting etc. If None, use all available trajectories.
-      random_state: Random state for reproducibility.
-    """
+        Args:
+            path: Path to hdf5 dataset file with reference rajectories.
+            traj_indices: List of trajectory indices to use, e.g. for train/test
+                splitting etc. If None, use all available trajectories.
+            random_state: Random state for reproducibility.
+        """
 
         if random_state is None:
             self._random_state = np.random.RandomState(None)
@@ -72,12 +72,12 @@ class HDF5FlightTrajectoryLoader(HDF5TrajectoryLoader):
     ):
         """Initializes the flight trajectory loader.
 
-    Args:
-      path: Path to hdf5 dataset file with reference rajectories.
-      traj_indices: List of trajectory indices to use, e.g. for train/test
-        splitting etc. If None, use all available trajectories.
-      random_state: Random state for reproducibility.
-    """
+        Args:
+            path: Path to hdf5 dataset file with reference rajectories.
+            traj_indices: List of trajectory indices to use, e.g. for train/test
+                splitting etc. If None, use all available trajectories.
+            random_state: Random state for reproducibility.
+        """
         super().__init__(path, traj_indices, random_state=random_state)
 
         self._com_qpos = []
@@ -103,17 +103,17 @@ class HDF5FlightTrajectoryLoader(HDF5TrajectoryLoader):
             end_step: Optional[int] = None) -> Tuple[np.ndarray, np.ndarray]:
         """Returns a flight trajectory from the dataset.
 
-    Args:
-      traj_idx: Index of the desired trajectory. If None, a random trajectory
-        is selected.
-      start_step: Start index for the trajectory slice. If None, defaults to
-        the beginning.
-      end_step: End index for the trajectory slice. If None, defaults to the
-        end.
+        Args:
+            traj_idx: Index of the desired trajectory. If None, a random
+                trajectory is selected.
+            start_step: Start index for the trajectory slice. If None, defaults
+                to the beginning.
+            end_step: End index for the trajectory slice. If None, defaults to
+                the end.
 
-    Returns:
-      tuple: Two numpy arrays for com_qpos and com_qvel respectively.
-    """
+        Returns:
+            tuple: Two numpy arrays for com_qpos and com_qvel respectively.
+        """
         if traj_idx is None:
             traj_idx = self._random_state.choice(self._traj_indices)
 
@@ -139,12 +139,12 @@ class HDF5WalkingTrajectoryLoader(HDF5TrajectoryLoader):
     ):
         """Initializes the walking trajectory loader.
 
-    Args:
-      path: Path to hdf5 dataset file with reference rajectories.
-      traj_indices: List of trajectory indices to use, e.g. for train/test
-        splitting etc. If None, use all available trajectories.
-      random_state: Random state for reproducibility.
-    """
+        Args:
+            path: Path to hdf5 dataset file with reference rajectories.
+            traj_indices: List of trajectory indices to use, e.g. for train/test
+                splitting etc. If None, use all available trajectories.
+            random_state: Random state for reproducibility.
+        """
 
         super().__init__(path, traj_indices, random_state=random_state)
 
@@ -163,18 +163,18 @@ class HDF5WalkingTrajectoryLoader(HDF5TrajectoryLoader):
             end_step: Optional[int] = None) -> Dict[str, np.ndarray]:
         """Returns a walking trajectory from the dataset.
 
-    Args:
-      traj_idx: Index of the desired trajectory. If None, a random trajectory
-                is selected.
-      start_step: Start index for the trajectory slice. If None, defaults to
-        the beginning.
-      end_step: End index for the trajectory slice. If None, defaults to the
-                end.
+        Args:
+            traj_idx: Index of the desired trajectory. If None, a random
+                trajectory is selected.
+            start_step: Start index for the trajectory slice. If None, defaults
+                to the beginning.
+            end_step: End index for the trajectory slice. If None, defaults to
+                the end.
 
-    Returns:
-      dict: Dictionary containing qpos, qvel, root2site, and joint_quat of the
-        trajectory.
-    """
+        Returns:
+            dict: Dictionary containing qpos, qvel, root2site, and joint_quat
+                of the trajectory.
+        """
         if traj_idx is None:
             traj_idx = self._random_state.choice(self._traj_indices)
 

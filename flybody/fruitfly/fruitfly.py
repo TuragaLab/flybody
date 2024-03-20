@@ -356,7 +356,7 @@ class FruitFly(legacy_base.Walker):
         body_mass = physics.named.model.body_subtreemass[
             'walker/thorax']  # gram.
         self._weight = np.linalg.norm(physics.model.opt.gravity) * body_mass
-        # Fold wings if not used.
+        # Retract wings if not used.
         if not self._use_wings and self.name == 'walker':
             for s in ['left', 'right']:
                 for dof in ['yaw', 'roll', 'pitch']:

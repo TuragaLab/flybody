@@ -27,16 +27,17 @@ class WalkImitation(Walking):
                  **kwargs):
         """This task is a combination of imitation walking and ghost tracking.
 
-    Args:
-      traj_generator: Trajectory generator for generating walking trajectories.
-      mocap_joint_names: Names of mocap joints.
-      mocap_site_names: Names of mocap sites.
-      terminal_com_dist: Episode will be terminated when CoM distance from model
-        to ghost exceeds terminal_com_dist.
-      claw_friction: Friction of claw.
-      trajectory_sites: Whether to render trajectory sites.
-      **kwargs: Arguments passed to the superclass constructor.
-    """
+        Args:
+            traj_generator: Trajectory generator for generating walking
+                trajectories.
+            mocap_joint_names: Names of mocap joints.
+            mocap_site_names: Names of mocap sites.
+            terminal_com_dist: Episode will be terminated when CoM distance
+                from model to ghost exceeds terminal_com_dist.
+            claw_friction: Friction of claw.
+            trajectory_sites: Whether to render trajectory sites.
+            **kwargs: Arguments passed to the superclass constructor.
+        """
 
         super().__init__(add_ghost=True, ghost_visible_legs=False, **kwargs)
 

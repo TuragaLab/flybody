@@ -18,10 +18,10 @@ class WalkOnBall(Walking):
     def __init__(self, claw_friction: Optional[float] = 1.0, **kwargs):
         """Task of tethered fly walking on floating ball.
 
-    Args:
-      claw_friction: Friction of claw geoms with floor.
-      **kwargs: Arguments passed to the superclass constructor.
-    """
+        Args:
+            claw_friction: Friction of claw geoms with floor.
+            **kwargs: Arguments passed to the superclass constructor.
+        """
 
         super().__init__(add_ghost=False, ghost_visible_legs=False, **kwargs)
 
@@ -84,8 +84,6 @@ class WalkOnBall(Walking):
     @composer.observable
     def ball_qvel(self):
         """Simple observable of ball rotational velocity."""
-
         def get_ball_qvel(physics: 'mjcf.Physics'):
             return physics.named.data.qvel['ball']
-
         return observable.Generic(get_ball_qvel)
