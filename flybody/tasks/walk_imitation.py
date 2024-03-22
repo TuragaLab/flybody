@@ -1,7 +1,7 @@
 """Walking imitation task for fruit fly."""
 # ruff: noqa: F821
 
-from typing import Optional, Sequence
+from typing import Sequence
 import numpy as np
 
 from flybody.tasks.base import Walking
@@ -22,7 +22,7 @@ class WalkImitation(Walking):
                  mocap_joint_names: Sequence[str],
                  mocap_site_names: Sequence[str],
                  terminal_com_dist: float = 0.33,
-                 claw_friction: Optional[float] = 1.0,
+                 claw_friction: float | None = 1.0,
                  trajectory_sites: bool = True,
                  **kwargs):
         """This task is a combination of imitation walking and ghost tracking.

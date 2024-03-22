@@ -21,7 +21,7 @@ from flybody.tasks.trajectory_loaders import (HDF5FlightTrajectoryLoader,
 
 def flight_imitation(wpg_pattern_path: str,
                      ref_path: str,
-                     random_state: np.random.RandomState = None,
+                     random_state: np.random.RandomState | None = None,
                      terminal_com_dist: float = 2.0):
     """Requires a fruitfly to track a flying reference.
   
@@ -61,7 +61,7 @@ def flight_imitation(wpg_pattern_path: str,
 
 
 def walk_imitation(ref_path: str,
-                   random_state: np.random.RandomState = None,
+                   random_state: np.random.RandomState | None = None,
                    terminal_com_dist: float = 0.3):
     """Requires a fruitfly to track a reference walking fly.
 
@@ -77,8 +77,8 @@ def walk_imitation(ref_path: str,
     walker = fruitfly.FruitFly
     arena = floors.Floor()
     # Initialize a walking trajectory loader.
-    traj_generator = HDF5WalkingTrajectoryLoader(path=ref_path,
-                                                 random_state=random_state)
+    traj_generator = HDF5WalkingTrajectoryLoader(
+        path=ref_path, random_state=random_state)
     # Build a task that rewards the agent for tracking a walking ghost.
     time_limit = 10.0
     task = WalkImitation(walker=walker,
@@ -97,7 +97,7 @@ def walk_imitation(ref_path: str,
                                 strip_singleton_obs_buffer_dim=True)
 
 
-def walk_on_ball(random_state: np.random.RandomState = None):
+def walk_on_ball(random_state: np.random.RandomState | None = None):
     """Requires a tethered fruitfly to walk on a floating ball.
 
     Args:
@@ -128,7 +128,7 @@ def walk_on_ball(random_state: np.random.RandomState = None):
 
 def vision_guided_flight(wpg_pattern_path: str,
                          bumps_or_trench: str = 'bumps',
-                         random_state: np.random.RandomState = None,
+                         random_state: np.random.RandomState | None = None,
                          **kwargs_arena):
     """Vision-guided flight tasks: 'bumps' and 'trench'.
 
