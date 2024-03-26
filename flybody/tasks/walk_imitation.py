@@ -24,6 +24,7 @@ class WalkImitation(Walking):
                  terminal_com_dist: float = 0.33,
                  claw_friction: float | None = 1.0,
                  trajectory_sites: bool = True,
+                 inference_mode: bool = False,
                  **kwargs):
         """This task is a combination of imitation walking and ghost tracking.
 
@@ -36,6 +37,8 @@ class WalkImitation(Walking):
                 from model to ghost exceeds terminal_com_dist.
             claw_friction: Friction of claw.
             trajectory_sites: Whether to render trajectory sites.
+            inference_mode: Whether to run in test mode and skip full-body
+                reward calculation.
             **kwargs: Arguments passed to the superclass constructor.
         """
 
@@ -44,6 +47,7 @@ class WalkImitation(Walking):
         self._traj_generator = traj_generator
         self._terminal_com_dist = terminal_com_dist
         self._trajectory_sites = trajectory_sites
+        self._inference_mode = inference_mode
         self._max_episode_steps = round(
             self._time_limit / self.control_timestep) + 1
         self._next_traj_idx = None
@@ -145,7 +149,8 @@ class WalkImitation(Walking):
 
     def get_reward_factors(self, physics):
         """Returns factorized reward terms."""
-
+        if self._inference_mode:
+            return (1,)
         step = round(physics.time() / self.control_timestep)
         walker_ft = get_walker_features(physics, self._mocap_joints,
                                         self._mocap_sites)
