@@ -210,10 +210,13 @@ class HDF5WalkingTrajectoryLoader(HDF5TrajectoryLoader):
         return [s.decode('utf-8') for s in self._h5['id2name']['joints']]
 
 
-class WalkingTrajectoryTestPlug():
-    """A simple inference/test-time replacement for walking trajectory loader.
+class InferenceWalkingTrajectoryLoader():
+    """Simple drop-in inference-time replacement for walking trajectory loader.
     
-    To use this class, create qpos and qvel for your test trajectory and then
+    This trajectory loader can be used for bypassing loading actual walking
+    datasets and loading custom trajectories instead, e.g. at inference time.
+
+    To use this class, create qpos and qvel for your custom trajectory and then
     set this trajectory for loading in the walking task by calling:
     env.task._traj_generator.set_next_trajectory(qpos, qvel)
     """
