@@ -1320,6 +1320,9 @@ def main(argv: Sequence[str]):
     print('Remove gravcomp="0".')
     xml_string = xml_string.replace(b' gravcomp="0"', b'')
 
+    print('Replace .msh with .obj.')
+    xml_string = xml_string.replace(b'.msh', b'.obj')
+
     print('Insert spaces between top level elements.')
     lines = xml_string.splitlines()
     newlines = []
