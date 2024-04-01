@@ -10,16 +10,24 @@
 
 The fly model was developed in a collaborative effort by Google DeepMind and HHMI Janelia Research Campus. 
 
-We envision our model as a platform for fruit fly biophysics simulations and for modeling neural control of sensorimotor behavior in an embodied context; see our accompanying [publication](https://www.biorxiv.org/content/10.1101/2024.03.11.584515).
+We envision our model as a platform for fruit fly biophysics simulations and for modeling neural control of sensorimotor behavior in an embodied context; see our accompanying [publication][paper].
 
 ## Getting Started
 
-The quickest way to get started is to take a look at an introductory [tutorial notebook](https://github.com/TuragaLab/flybody/blob/main/docs/getting-started.ipynb) or <a target="_blank" href="https://colab.research.google.com/github/TuragaLab/flybody/blob/main/docs/getting-started.ipynb">
-  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
+The quickest way to get started is to take a look at an introductory [tutorial notebook][tutorial] or [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/TuragaLab/flybody/blob/main/docs/getting-started.ipynb).
 
-Also, [this notebook](https://github.com/TuragaLab/flybody/blob/main/docs/fly-env-examples.ipynb) shows examples of the flight imitation, walking imitation, and vision-guided flight RL task environments. 
+Also, [this notebook][envs] shows examples of the flight imitation, walking imitation, and vision-guided flight RL task environments. 
 
-To train the fly, take a look at the [distributed RL training script](https://github.com/TuragaLab/flybody/blob/main/flybody/train_dmpo_ray.py), which uses Ray to parallelize the DMPO agent training.
+To train the fly, take a look at the [distributed RL training script][ray-script], which uses Ray to parallelize the DMPO agent training.
+
+[tutorial]: https://github.com/TuragaLab/flybody/blob/main/docs/getting-started.ipynb
+[envs]: https://github.com/TuragaLab/flybody/blob/main/docs/fly-env-examples.ipynb
+[ray-script]: https://github.com/TuragaLab/flybody/blob/main/flybody/train_dmpo_ray.py
+[paper]: https://www.biorxiv.org/content/10.1101/2024.03.11.584515
+[ray]: https://github.com/ray-project/ray
+[tf]: https://github.com/tensorflow/tensorflow
+[acme]: https://github.com/google-deepmind/acme
+[mujoco-rendering]: https://github.com/google-deepmind/dm_control/tree/main?tab=readme-ov-file#rendering
 
 ## Installation
 
@@ -37,7 +45,7 @@ Follow these steps to install `flybody`:
    `flybody` can be installed in one of the three modes described next. Also, for installation in editable (developer) mode, use the commands as shown. For installation in regular, not editable, mode, drop the `-e` flag.
    
 2. **Core installation**: minimal installation for experimenting with the
-   fly model in MuJoCo or prototyping task environments. ML dependencies such as [Tensorflow](https://github.com/tensorflow/tensorflow) and [Acme](https://github.com/google-deepmind/acme) are not included and policy rollouts and training are not automatically supported.
+   fly model in MuJoCo or prototyping task environments. ML dependencies such as [Tensorflow][tf] and [Acme][acme] are not included and policy rollouts and training are not automatically supported.
    ```bash
    pip install -e .
    ```
@@ -48,7 +56,7 @@ Follow these steps to install `flybody`:
    pip install -e .[tf]
    ```
 
-4. **Ray training extension (optional)**: same as core installation and ML extension, plus [Ray](https://github.com/ray-project/ray) to also enable
+4. **Ray training extension (optional)**: same as core installation and ML extension, plus [Ray][ray] to also enable
    distributed policy training in the fly task environments.
    ```bash
    pip install -e .[ray]
@@ -76,7 +84,7 @@ Follow these steps to install `flybody`:
    
 ### Additional configuring
 
-1. You may need to set [MuJoCo rendering](https://github.com/google-deepmind/dm_control/tree/main?tab=readme-ov-file#rendering) environment varibles, e.g.:
+1. You may need to set [MuJoCo rendering][mujoco-rendering] environment varibles, e.g.:
    ```bash
    export MUJOCO_GL=egl
    export MUJOCO_EGL_DEVICE_ID=0
@@ -89,7 +97,8 @@ Follow these steps to install `flybody`:
 3. You may want to run `pytest` to test the main components of the `flybody` installation.
 
 ## Citing `flybody`
-```
+See our accompanying [publication][paper]. Thank you for your interest in our fly model:)
+```bibtex
 @article{
   flybody,
   title = {Whole-body simulation of realistic fruit fly locomotion with
@@ -104,4 +113,3 @@ Follow these steps to install `flybody`:
   year = {2024},
 }
 ```
-Thank you for your interest in our fly model:)
