@@ -14,13 +14,14 @@ We envision our model as a platform for fruit fly biophysics simulations and for
 
 ## Getting Started
 
-The quickest way to get started is to take a look at an introductory [tutorial notebook][tutorial] or [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/TuragaLab/flybody/blob/main/docs/getting-started.ipynb).
+The quickest way to get started is to take a look at an introductory [tutorial notebook][tutorial] or [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)][tutorial-colab].
 
 Also, [this notebook][envs] shows examples of the flight imitation, walking imitation, and vision-guided flight RL task environments. 
 
 To train the fly, take a look at the [distributed RL training script][ray-script], which uses Ray to parallelize the DMPO agent training.
 
 [tutorial]: https://github.com/TuragaLab/flybody/blob/main/docs/getting-started.ipynb
+[tutorial-colab]: https://colab.research.google.com/github/TuragaLab/flybody/blob/main/docs/getting-started.ipynb
 [envs]: https://github.com/TuragaLab/flybody/blob/main/docs/fly-env-examples.ipynb
 [ray-script]: https://github.com/TuragaLab/flybody/blob/main/flybody/train_dmpo_ray.py
 [paper]: https://www.biorxiv.org/content/10.1101/2024.03.11.584515
@@ -99,8 +100,7 @@ Follow these steps to install `flybody`:
 ## Citing `flybody`
 See our accompanying [publication][paper]. Thank you for your interest in our fly model:)
 ```bibtex
-@article{
-  flybody,
+@article{flybody,
   title = {Whole-body simulation of realistic fruit fly locomotion with
            deep reinforcement learning},
   author = {Roman Vaxenburg and Igor Siwanowicz and Josh Merel and Alice A Robie and
