@@ -1,0 +1,28 @@
+# This workflow tests tensorflow installation and runs a policy network.
+
+name: tf test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+    - name: Install dependencies
+      run: |
+        conda install -y python=3.10
+        conda env update --file flybody.yml --name base
+        python -m pip install --upgrade pip
+        pip install pytest
+        pip install .[tf]
