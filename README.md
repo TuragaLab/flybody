@@ -5,6 +5,7 @@
 ![pytest workflow](https://github.com/TuragaLab/flybody/actions/workflows/pytest.yml/badge.svg)
 ![python versions](https://github.com/TuragaLab/flybody/actions/workflows/pyversions.yml/badge.svg)
 ![lint](https://github.com/TuragaLab/flybody/actions/workflows/lint.yml/badge.svg)
+![tf](https://github.com/TuragaLab/flybody/actions/workflows/tf-test.yml/badge.svg)
 
 `flybody` is an anatomically-detailed body model of the fruit fly _Drosophila melanogaster_ for MuJoCo physics simulator and reinforcement learning applications. 
 
