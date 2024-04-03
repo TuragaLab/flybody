@@ -1,6 +1,6 @@
 # This workflow tests tensorflow installation and runs a policy network.
 
-name: tf test
+name: tf
 
 on:
   push:
@@ -26,3 +26,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest
         pip install .[tf]
+    - name: Test with pytest
+      run: |
+        export MUJOCO_GL="glfw"
+        pytest tests/tf_test.py
