@@ -11,6 +11,7 @@ from flybody.tasks.flight_imitation import FlightImitationWBPG
 from flybody.tasks.walk_imitation import WalkImitation
 from flybody.tasks.walk_on_ball import WalkOnBall
 from flybody.tasks.vision_flight import VisionFlightImitationWBPG
+from flybody.tasks.template_task import TemplateTask
 
 from flybody.tasks.arenas.ball import BallFloor
 from flybody.tasks.arenas.hills import SineBumps, SineTrench
@@ -173,6 +174,36 @@ def vision_guided_flight(wpg_pattern_path: str,
                                      joint_filter=0.,
                                      floor_contacts=True,
                                      floor_contacts_fatal=True)
+
+    return composer.Environment(time_limit=time_limit,
+                                task=task,
+                                random_state=random_state,
+                                strip_singleton_obs_buffer_dim=True)
+
+
+def template_task(random_state: np.random.RandomState | None = None,
+                  joint_filter: float = 0.01,
+                  adhesion_filter: float = 0.007,
+                  time_limit: float = 1.):
+    """Fake template walking task for testing.
+
+    Args:
+        random_state: Random state for reproducibility.
+        joint_filter: Timescale of filter for joint actuators. 0: disabled.
+        adhesion_filter: Timescale of filter for adhesion actuators. 0: disabled.
+
+    Returns:
+        Template walking environment.
+    """
+    # Build a fruitfly walker and arena.
+    walker = fruitfly.FruitFly
+    arena = floors.Floor()
+    # Build a task that rewards the agent for tracking a walking ghost.
+    task = TemplateTask(walker=walker,
+                        arena=arena,
+                        joint_filter=joint_filter,
+                        adhesion_filter=adhesion_filter,
+                        time_limit=time_limit)
 
     return composer.Environment(time_limit=time_limit,
                                 task=task,

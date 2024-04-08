@@ -1,17 +1,15 @@
 """Template class for walking fly tasks."""
 # ruff: noqa: F821
 
-from typing import Optional
 import numpy as np
 
 from flybody.tasks.base import Walking
-from flybody.tasks.constants import (_TERMINAL_ANGVEL, _TERMINAL_LINVEL)
 
 
 class TemplateTask(Walking):
     """Template class for walking fly tasks."""
 
-    def __init__(self, claw_friction: Optional[float] = 1.0, **kwargs):
+    def __init__(self, claw_friction: float = 1.0, **kwargs):
         """Template class for walking fly tasks.
 
         Args:
@@ -47,11 +45,10 @@ class TemplateTask(Walking):
     def get_reward_factors(self, physics):
         """Returns factorized reward terms."""
         # Calculate reward factors here.
-        return (1, )
+        return (1,)
 
     def check_termination(self, physics: 'mjcf.Physics') -> bool:
         """Check various termination conditions."""
-        linvel = np.linalg.norm(self._walker.observables.velocimeter(physics))
-        angvel = np.linalg.norm(self._walker.observables.gyro(physics))
-        return (linvel > _TERMINAL_LINVEL or angvel > _TERMINAL_ANGVEL
-                or super().check_termination(physics))
+        # Maybe add some termination conditions.
+        should_terminate = False
+        return should_terminate or super().check_termination(physics)
