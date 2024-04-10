@@ -139,29 +139,29 @@ class FruitFly(legacy_base.Walker):
     ):
         """Build a fruitfly walker.
 
-    Args:
-      name: Name of the walker.
-      use_legs: Whether to use or retract the legs.
-      use_wings: Whether to use or retract the wings.
-      use_mouth: Whether to use or retract the mouth.
-      use_antennae: Whether to use the antennae.
-      joint_filter: Timescale of filter for joint actuators. 0: disabled.
-      adhesion_filter: Timescale of filter for adhesion actuators. 0: disabled.
-      body_pitch_angle: Body pitch angle for initial flight pose, relative to
-        ground, degrees. 0: horizontal body position. Default value from
-        https://doi.org/10.1126/science.1248955
-      stroke_plane_angle: Angle of wing stroke plane for initial flight pose,
-        relative to ground, degrees. 0: horizontal stroke plane.
-      physics_timestep: Timestep of the simulation.
-      control_timestep: Timestep of the controller.
-      num_user_actions: Optional, number of additional actions for custom usage
-        e.g. in before_step callback. The action range is [-1, 1]. 0: Not used.
-      eye_camera_fovy: Vertical field of view of the eye cameras, degrees. The
-        horizontal field of view is computed automatically given the window
-        size.
-      eye_camera_size: Size in pixels (height and width) of the eye cameras.
-        Height and width are assumed equal.
-    """
+        Args:
+            name: Name of the walker.
+            use_legs: Whether to use or retract the legs.
+            use_wings: Whether to use or retract the wings.
+            use_mouth: Whether to use or retract the mouth.
+            use_antennae: Whether to use the antennae.
+            joint_filter: Timescale of filter for joint actuators. 0: disabled.
+            adhesion_filter: Timescale of filter for adhesion actuators. 0: disabled.
+            body_pitch_angle: Body pitch angle for initial flight pose, relative to
+                ground, degrees. 0: horizontal body position. Default value from
+                https://doi.org/10.1126/science.1248955
+            stroke_plane_angle: Angle of wing stroke plane for initial flight pose,
+                relative to ground, degrees. 0: horizontal stroke plane.
+            physics_timestep: Timestep of the simulation.
+            control_timestep: Timestep of the controller.
+            num_user_actions: Optional, number of additional actions for custom usage
+                e.g. in before_step callback. The action range is [-1, 1]. 0: Not used.
+            eye_camera_fovy: Vertical field of view of the eye cameras, degrees. The
+                horizontal field of view is computed automatically given the window
+                size.
+            eye_camera_size: Size in pixels (height and width) of the eye cameras.
+                Height and width are assumed equal.
+        """
         self._use_wings = use_wings
         self._adhesion_filter = adhesion_filter
         self._control_timestep = control_timestep

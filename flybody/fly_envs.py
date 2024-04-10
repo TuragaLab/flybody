@@ -184,25 +184,31 @@ def vision_guided_flight(wpg_pattern_path: str,
 def template_task(random_state: np.random.RandomState | None = None,
                   joint_filter: float = 0.01,
                   adhesion_filter: float = 0.007,
+                  observables_options: dict | None = None,
                   time_limit: float = 1.):
-    """Fake template walking task for testing.
+    """Fake no-op walking task for testing.
 
     Args:
         random_state: Random state for reproducibility.
         joint_filter: Timescale of filter for joint actuators. 0: disabled.
         adhesion_filter: Timescale of filter for adhesion actuators. 0: disabled.
-
+        observables_options: A dict of dicts of configuration options keyed on
+            observable names, or a dict of configuration options, which will
+            propagate those options to all observables.
+        time_limit: Episode time limit.
+        
     Returns:
         Template walking environment.
     """
     # Build a fruitfly walker and arena.
     walker = fruitfly.FruitFly
     arena = floors.Floor()
-    # Build a task that rewards the agent for tracking a walking ghost.
+    # Build a no-op task.
     task = TemplateTask(walker=walker,
                         arena=arena,
                         joint_filter=joint_filter,
                         adhesion_filter=adhesion_filter,
+                        observables_options=observables_options,
                         time_limit=time_limit)
 
     return composer.Environment(time_limit=time_limit,

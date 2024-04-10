@@ -44,38 +44,43 @@ class FruitFlyTask(composer.Task, ABC):
         eye_camera_size: int = 32,
         future_steps: int = 0,
         initialize_qvel: bool = False,
+        observables_options: dict | None = None,
     ):
         """Construct a fruitfly task.
 
         Args:
-        walker: Walker constructor to be used.
-        arena: Arena to be used.
-        use_legs: Whether the legs are active.
-        use_wings: Whether the wings are active.
-        use_mouth: Whether the mouth is active.
-        use_antennae: Whether the antennae are active.
-        physics_timestep: Physics timestep to use for simulation.
-        control_timestep: Control timestep.
-        joint_filter: Timescale of filter for joint actuators. 0: disabled.
-        adhesion_filter: Timescale of filter for adhesion actuators. 0: disabled.
-        body_pitch_angle: Body pitch angle for initial flight pose, relative to
-            ground, degrees. 0: horizontal body position. Default value from
-            https://doi.org/10.1126/science.1248955
-        stroke_plane_angle: Angle of wing stroke plane for initial flight pose,
-            relative to ground, degrees. 0: horizontal stroke plane.
-        add_ghost: Whether to add ghost fly to arena.
-        ghost_visible_legs: Whether to show or hide ghost legs.
-        ghost_offset: Shift ghost by this vector for better visualizations.
-            In observables, the ghost is kept at its original position.
-        num_user_actions: Optional, number of additional actions for custom usage,
-            e.g. in before_step callback. The action range is [-1, 1]. 0: Not used.
-        eye_camera_fovy: Vertical field of view of the eye cameras, degrees.
-        eye_camera_size: Size in pixels (height and width) of the eye cameras.
-            Height and width are assumed equal.
-        future_steps: Number of future steps of reference trajectory to provide
-            as observables. Zero means only the current step is used.
-        initialize_qvel: whether to init qvel of root or not (wings are always vel
-            inited)
+            walker: Walker constructor to be used.
+            arena: Arena to be used.
+            time_limit: Time limit beyond which episode is forced to terminate.
+            use_legs: Whether the legs are active.
+            use_wings: Whether the wings are active.
+            use_mouth: Whether the mouth is active.
+            use_antennae: Whether the antennae are active.
+            physics_timestep: Physics timestep to use for simulation.
+            control_timestep: Control timestep.
+            joint_filter: Timescale of filter for joint actuators. 0: disabled.
+            adhesion_filter: Timescale of filter for adhesion actuators. 0: disabled.
+            body_pitch_angle: Body pitch angle for initial flight pose, relative to
+                ground, degrees. 0: horizontal body position. Default value from
+                https://doi.org/10.1126/science.1248955
+            stroke_plane_angle: Angle of wing stroke plane for initial flight pose,
+                relative to ground, degrees. 0: horizontal stroke plane.
+            add_ghost: Whether to add ghost fly to arena.
+            ghost_visible_legs: Whether to show or hide ghost legs.
+            ghost_offset: Shift ghost by this vector for better visualizations.
+                In observables, the ghost is kept at its original position.
+            num_user_actions: Optional, number of additional actions for custom usage,
+                e.g. in before_step callback. The action range is [-1, 1]. 0: Not used.
+            eye_camera_fovy: Vertical field of view of the eye cameras, degrees.
+            eye_camera_size: Size in pixels (height and width) of the eye cameras.
+                Height and width are assumed equal.
+            future_steps: Number of future steps of reference trajectory to provide
+                as observables. Zero means only the current step is used.
+            initialize_qvel: whether to init qvel of root or not (wings are always vel
+                inited)
+            observables_options: A dict of dicts of configuration options keyed on
+                observable names, or a dict of configuration options, which will
+                propagate those options to all observables.
         """
         self._time_limit = time_limit
         self._initialize_qvel = initialize_qvel
@@ -111,6 +116,8 @@ class FruitFlyTask(composer.Task, ABC):
                               num_user_actions=num_user_actions,
                               eye_camera_fovy=eye_camera_fovy,
                               eye_camera_size=eye_camera_size)
+        # Set options to fly observables, if provided.
+        self._walker.observables.set_options(observables_options)
 
         # Add it to the arena.
         spawn_pos = self._walker.upright_pose.xpos
