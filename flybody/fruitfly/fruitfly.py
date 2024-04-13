@@ -347,6 +347,10 @@ class FruitFly(legacy_base.Walker):
 
         super()._build()
 
+        # Initialize previous action.
+        self._prev_action = np.zeros(shape=self.action_spec.shape,
+                                     dtype=self.action_spec.dtype)
+
     # -------------------------------------------------------------------------
 
     def initialize_episode(self, physics: 'mjcf.Physics',
@@ -385,6 +389,10 @@ class FruitFly(legacy_base.Walker):
     @property
     def mjcf_model(self):
         return self._mjcf_root
+
+    @property
+    def prev_action(self):
+        return self._prev_action
 
     @composer.cached_property
     def root_body(self):
@@ -487,9 +495,11 @@ class FruitFly(legacy_base.Walker):
 
     def apply_action(self, physics, action, random_state):
         """Apply action to walker's actuators."""
-        del random_state
+        del random_state  # Unused.
         if not self.mjcf_model.find_all('actuator'):
             return
+        # Update previous action.
+        self._prev_action[:] = action
         # Apply MuJoCo actions.
         ctrl = np.zeros(physics.model.nu)
         for key, indices in self._action_indices.items():
