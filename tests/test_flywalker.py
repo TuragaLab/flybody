@@ -119,6 +119,15 @@ def test_fly_bulletproof():
                     assert action_spec.minimum[i] == -1
                     assert action_spec.maximum[i] == 1
 
+def test_prev_action():
+    fly = FruitFly()
+    assert all(fly.prev_action == 0)
+    action_size = fly.action_spec.shape
+    physics = mjcf.Physics.from_mjcf_model(fly.mjcf_model)
+    for _ in range(10):
+        action = np.random.uniform(-1., 1, action_size)
+        fly.apply_action(physics, action, random_state=None)
+        assert all(np.isclose(action, fly.prev_action))
 
 def test_evaluate_observables():
     fly = FruitFly()
