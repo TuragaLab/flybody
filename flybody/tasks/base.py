@@ -45,6 +45,7 @@ class FruitFlyTask(composer.Task, ABC):
         future_steps: int = 0,
         initialize_qvel: bool = False,
         observables_options: dict | None = None,
+        action_corruptor: Callable | None = None,
     ):
         """Construct a fruitfly task.
 
@@ -78,9 +79,12 @@ class FruitFlyTask(composer.Task, ABC):
                 as observables. Zero means only the current step is used.
             initialize_qvel: whether to init qvel of root or not (wings are always vel
                 inited)
-            observables_options: A dict of dicts of configuration options keyed on
-                observable names, or a dict of configuration options, which will
-                propagate those options to all observables.
+            observables_options (optional): A dict of dicts of configuration options
+                keyed on observable names, or a dict of configuration options, which
+                will propagate those options to all observables.
+            action_corruptor (optional): A callable which takes an action as an
+                argument, modifies it, and returns it. An example use case for
+                this is to add random noise to the action.
         """
         self._time_limit = time_limit
         self._initialize_qvel = initialize_qvel
@@ -100,6 +104,7 @@ class FruitFlyTask(composer.Task, ABC):
         self._ghost_offset = ghost_offset
         self._num_user_actions = num_user_actions
         self._future_steps = future_steps
+        self._action_corruptor = action_corruptor
 
         # Instantiate a fruitfly walker.
         self._walker = walker(name='walker',
@@ -189,8 +194,10 @@ class FruitFlyTask(composer.Task, ABC):
 
     def before_step(self, physics: 'mjcf.Physics', action,
                     random_state: np.random.RandomState):
+        """Apply (potentially corrupted) actions."""
         self._step_counter += 1
-        # Apply actions.
+        if self._action_corruptor is not None:
+            action = self._action_corruptor(action, random_state)
         self._walker.apply_action(physics, action, random_state)
 
     def should_terminate_episode(self, physics: 'mjcf.Physics'):

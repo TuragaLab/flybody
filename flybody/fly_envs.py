@@ -1,5 +1,7 @@
 """Create examples of flight and walking task environments for fruitfly."""
 
+from typing import Callable
+
 import numpy as np
 
 from dm_control import composer
@@ -184,19 +186,23 @@ def vision_guided_flight(wpg_pattern_path: str,
 def template_task(random_state: np.random.RandomState | None = None,
                   joint_filter: float = 0.01,
                   adhesion_filter: float = 0.007,
+                  time_limit: float = 1.,
                   observables_options: dict | None = None,
-                  time_limit: float = 1.):
+                  action_corruptor: Callable | None = None):
     """Fake no-op walking task for testing.
 
     Args:
         random_state: Random state for reproducibility.
         joint_filter: Timescale of filter for joint actuators. 0: disabled.
         adhesion_filter: Timescale of filter for adhesion actuators. 0: disabled.
-        observables_options: A dict of dicts of configuration options keyed on
-            observable names, or a dict of configuration options, which will
-            propagate those options to all observables.
         time_limit: Episode time limit.
-        
+        observables_options (optional): A dict of dicts of configuration options
+            keyed on observable names, or a dict of configuration options, which
+            will propagate those options to all observables.
+        action_corruptor (optional): A callable which takes an action as an
+            argument, modifies it, and returns it. An example use case for
+            this is to add random noise to the action.
+
     Returns:
         Template walking environment.
     """
@@ -209,6 +215,7 @@ def template_task(random_state: np.random.RandomState | None = None,
                         joint_filter=joint_filter,
                         adhesion_filter=adhesion_filter,
                         observables_options=observables_options,
+                        action_corruptor=action_corruptor,
                         time_limit=time_limit)
 
     return composer.Environment(time_limit=time_limit,
