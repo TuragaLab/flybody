@@ -348,8 +348,9 @@ class FruitFly(legacy_base.Walker):
         super()._build()
 
         # Initialize previous action.
-        self._prev_action = np.zeros(shape=self.action_spec.shape,
-                                     dtype=self.action_spec.dtype)
+        self._prev_action = np.zeros(
+            shape=self.action_spec.shape[0] + num_user_actions,
+            dtype=self.action_spec.dtype)
 
     # -------------------------------------------------------------------------
 
