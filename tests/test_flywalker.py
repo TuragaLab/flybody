@@ -64,7 +64,7 @@ def test_fly_bulletproof():
 
         # Test that all action values are passed correctly to their
         # corresponding ctrl elements in MuJoCo.
-        n_actions = fly.action_spec.shape[0]
+        n_actions = fly.action_spec.shape[0] + user_action
         physics.reset()
         for key, action_indices in fly._action_indices.items():
             if key == 'user':
@@ -120,14 +120,15 @@ def test_fly_bulletproof():
                     assert action_spec.maximum[i] == 1
 
 def test_prev_action():
-    fly = FruitFly()
-    assert all(fly.prev_action == 0)
-    action_size = fly.action_spec.shape
-    physics = mjcf.Physics.from_mjcf_model(fly.mjcf_model)
-    for _ in range(10):
-        action = np.random.uniform(-1., 1, action_size)
-        fly.apply_action(physics, action, random_state=None)
-        assert all(np.isclose(action, fly.prev_action))
+    for num_user_actions in user_actions:
+        fly = FruitFly(num_user_actions=num_user_actions)
+        assert all(fly.prev_action == 0)
+        action_size = fly.action_spec.shape[0] + num_user_actions
+        physics = mjcf.Physics.from_mjcf_model(fly.mjcf_model)
+        for _ in range(10):
+            action = np.random.uniform(-1., 1, action_size)
+            fly.apply_action(physics, action, random_state=None)
+            assert all(np.isclose(action, fly.prev_action))
 
 def test_evaluate_observables():
     fly = FruitFly()
