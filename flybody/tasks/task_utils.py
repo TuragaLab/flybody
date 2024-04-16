@@ -172,8 +172,7 @@ def qpos_name2id(physics: 'mjcf.Physics') -> dict:
     return name2id_map
 
 
-def root2com(root_qpos, offset=np.array([-0.03697732, 0.00029205,
-                                         -0.0142447])):
+def root2com(root_qpos, offset=None):
     """Get fly CoM in world coordinates using fixed offset from fly's
     root joint.
 
@@ -186,13 +185,14 @@ def root2com(root_qpos, offset=np.array([-0.03697732, 0.00029205,
     Returns:
         CoM position in world coordinates, (3,).
     """
+    if offset is None:
+        offset = np.array([-0.03697732, 0.00029205, -0.0142447])
     offset_global = rotate_vec_with_quat(offset, root_qpos[3:])
     com = root_qpos[:3] + offset_global
     return com
 
 
-def com2root(com, quat, offset=np.array([-0.03697732, 0.00029205,
-                                         -0.0142447])):
+def com2root(com, quat, offset=None):
     """Get position of fly's root joint from CoM position in global coordinates.
 
     This function is inverse of root2com.
@@ -207,6 +207,8 @@ def com2root(com, quat, offset=np.array([-0.03697732, 0.00029205,
     Returns:
         Position of fly's root joint is world coordinates, (B, 3,).
     """
+    if offset is None:
+        offset = np.array([-0.03697732, 0.00029205, -0.0142447])
     offset_global = rotate_vec_with_quat(-offset, quat)
     root_pos = com + offset_global
     return root_pos
