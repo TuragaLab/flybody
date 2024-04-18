@@ -4,6 +4,7 @@ from typing import Callable
 
 import numpy as np
 
+from dm_control import mujoco
 from dm_control import composer
 from dm_control.locomotion.arenas import floors
 
@@ -222,7 +223,8 @@ def template_task(random_state: np.random.RandomState | None = None,
                         action_corruptor=action_corruptor,
                         mjcb_control=mjcb_control,
                         time_limit=time_limit)
-
+    # Reset control callback, if any.
+    mujoco.set_mjcb_control(None)
     return composer.Environment(time_limit=time_limit,
                                 task=task,
                                 random_state=random_state,
