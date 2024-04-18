@@ -187,6 +187,7 @@ def template_task(random_state: np.random.RandomState | None = None,
                   joint_filter: float = 0.01,
                   adhesion_filter: float = 0.007,
                   time_limit: float = 1.,
+                  mjcb_control: Callable | None = None,
                   observables_options: dict | None = None,
                   action_corruptor: Callable | None = None):
     """Fake no-op walking task for testing.
@@ -196,6 +197,9 @@ def template_task(random_state: np.random.RandomState | None = None,
         joint_filter: Timescale of filter for joint actuators. 0: disabled.
         adhesion_filter: Timescale of filter for adhesion actuators. 0: disabled.
         time_limit: Episode time limit.
+        mjcb_control: Optional MuJoCo control callback, a callable with
+            arguments (model, data). For more information, see
+            https://mujoco.readthedocs.io/en/stable/APIreference/APIglobals.html#mjcb-control
         observables_options (optional): A dict of dicts of configuration options
             keyed on observable names, or a dict of configuration options, which
             will propagate those options to all observables.
@@ -216,6 +220,7 @@ def template_task(random_state: np.random.RandomState | None = None,
                         adhesion_filter=adhesion_filter,
                         observables_options=observables_options,
                         action_corruptor=action_corruptor,
+                        mjcb_control=mjcb_control,
                         time_limit=time_limit)
 
     return composer.Environment(time_limit=time_limit,
