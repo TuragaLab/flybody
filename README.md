@@ -17,9 +17,9 @@ We envision our model as a platform for fruit fly biophysics simulations and for
 
 The fruit fly model itself lives [here][fly-home]. To visualize it, you can drag-and-drop `fruitfly.xml` or `floor.xml` to MuJoCo's `simulate` [viewer][simulate].
 
-The quickest way to get started with `flybody` is to take a look at an introductory [tutorial notebook][tutorial] or [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)][tutorial-colab].
+The quickest way to get started with `flybody` is to take a look at a [tutorial notebook][tutorial] or [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)][tutorial-colab].
 
-Also, [this notebook][envs] shows examples of the flight imitation, walking imitation, and vision-guided flight RL task environments. 
+Also, [this notebook][envs] shows examples of the flight and walking imitation, and vision-guided flight RL task environments. 
 
 To train the fly, take a look at the [distributed RL training script][ray-script], which uses Ray to parallelize the DMPO agent training.
 
