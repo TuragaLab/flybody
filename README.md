@@ -15,7 +15,7 @@ We envision our model as a platform for fruit fly biophysics simulations and for
 
 ## Getting Started
 
-The fruit fly model itself lives [here][fly-home]. To visualize it, you can drag-and-drop `fruitfly.xml` or `floor.xml` to MuJoCo's `simulate` [viewer][simulate].
+The fruit fly body model lives [here][fly-home]. To visualize it, you can drag-and-drop `fruitfly.xml` or `floor.xml` to MuJoCo's `simulate` [viewer][simulate].
 
 The quickest way to get started with `flybody` is to take a look at a [tutorial notebook][tutorial] or [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)][tutorial-colab].
 
