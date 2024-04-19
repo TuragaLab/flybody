@@ -15,12 +15,16 @@ We envision our model as a platform for fruit fly biophysics simulations and for
 
 ## Getting Started
 
-The quickest way to get started is to take a look at an introductory [tutorial notebook][tutorial] or [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)][tutorial-colab].
+The fruit fly model itself lives [here][fly-home]. To visualize it, you can drag-and-drop `fruitfly.xml` or `floor.xml` to MuJoCo's `simulate` [viewer][simulate].
+
+The quickest way to get started with `flybody` is to take a look at an introductory [tutorial notebook][tutorial] or [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)][tutorial-colab].
 
 Also, [this notebook][envs] shows examples of the flight imitation, walking imitation, and vision-guided flight RL task environments. 
 
 To train the fly, take a look at the [distributed RL training script][ray-script], which uses Ray to parallelize the DMPO agent training.
 
+[fly-home]: https://github.com/TuragaLab/flybody/tree/main/flybody/fruitfly/assets
+[simulate]: https://github.com/google-deepmind/mujoco
 [tutorial]: https://github.com/TuragaLab/flybody/blob/main/docs/getting-started.ipynb
 [tutorial-colab]: https://colab.research.google.com/github/TuragaLab/flybody/blob/main/docs/getting-started.ipynb
 [envs]: https://github.com/TuragaLab/flybody/blob/main/docs/fly-env-examples.ipynb
