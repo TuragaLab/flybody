@@ -2,6 +2,7 @@
 
 import os
 import numpy as np
+from dm_control import mujoco
 from flybody.fly_envs import template_task
 
 
@@ -91,3 +92,6 @@ def test_ctrl_callback():
             data.qfrc_actuator[dof_ids] * np.sin(np.arange(len(dof_ids)))))
         # Test noise not added to rert of dofs.
         assert all(data.qfrc_applied[dof_ids_complementary] == 0)
+
+    # Reset callback, otherwise subsequent tests will fail.
+    mujoco.set_mjcb_control(None)
