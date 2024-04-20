@@ -66,3 +66,28 @@ def test_action_corruptor():
         clean_action = np.random.uniform(-1., 1, n_act)
         _ = env.step(clean_action)
         assert all(np.isclose(clean_action+noise, env.task._walker.prev_action))
+
+
+def test_ctrl_callback():
+
+    dof_ids = [*range(6, 9), *range(42, 53), *range(75, 90)]
+    dof_ids_complementary = [i for i in range(108) if i not in dof_ids]
+    def ctrl_callback(model, data):
+        # Add noise to a subset of dofs.
+        qfrc_actuator = data.qfrc_actuator[dof_ids]
+        noise = np.sin(np.arange(len(dof_ids)))
+        data.qfrc_applied[dof_ids] = qfrc_actuator * noise
+    
+    env = template_task(mjcb_control=ctrl_callback)
+    n_act = env.action_spec().shape
+    _ = env.reset()
+    for _ in range(100):
+        action = np.random.uniform(-1., 1, n_act)
+        _ = env.step(action)
+        data = env.physics.data
+        # Test noise added to select dofs.
+        assert all(np.isclose(
+            data.qfrc_applied[dof_ids],
+            data.qfrc_actuator[dof_ids] * np.sin(np.arange(len(dof_ids)))))
+        # Test noise not added to rert of dofs.
+        assert all(data.qfrc_applied[dof_ids_complementary] == 0)
