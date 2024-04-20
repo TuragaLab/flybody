@@ -7,7 +7,7 @@
 ![lint](https://github.com/TuragaLab/flybody/actions/workflows/lint.yml/badge.svg)
 ![tf](https://github.com/TuragaLab/flybody/actions/workflows/tf-test.yml/badge.svg)
 
-`flybody` is an anatomically-detailed body model of the fruit fly _Drosophila melanogaster_ for MuJoCo physics simulator and reinforcement learning applications. 
+`flybody` is an anatomically-detailed body model of the fruit fly _Drosophila melanogaster_ for [MuJoCo][mujoco] physics simulator and reinforcement learning applications. 
 
 The fly model was developed in a collaborative effort by Google DeepMind and HHMI Janelia Research Campus. 
 
@@ -15,18 +15,19 @@ We envision our model as a platform for fruit fly biophysics simulations and for
 
 ## Getting Started
 
-The fruit fly body model lives [here][fly-home]. To visualize it, you can drag-and-drop `fruitfly.xml` or `floor.xml` to MuJoCo's `simulate` [viewer][simulate].
+The fruit fly body model lives [here][fly-home]. To visualize it, you can drag-and-drop `fruitfly.xml` or `floor.xml` to MuJoCo's `simulate` viewer.
 
 The quickest way to get started with `flybody` is to take a look at a [tutorial notebook][tutorial] or [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)][tutorial-colab].
 
 Also, [this notebook][envs] shows examples of the flight, walking, and vision-guided flight RL task environments. 
 
-To train the fly, take a look at the [distributed RL training script][ray-script], which uses Ray to parallelize the DMPO agent training.
+To train the fly, try the [distributed RL training script][ray-script], which uses [Ray][ray] to parallelize the [DMPO][dmpo] agent training.
 
 [fly-home]: https://github.com/TuragaLab/flybody/tree/main/flybody/fruitfly/assets
-[simulate]: https://github.com/google-deepmind/mujoco
+[mujoco]: https://github.com/google-deepmind/mujoco
 [tutorial]: https://github.com/TuragaLab/flybody/blob/main/docs/getting-started.ipynb
 [tutorial-colab]: https://colab.research.google.com/github/TuragaLab/flybody/blob/main/docs/getting-started.ipynb
+[dmpo]: https://github.com/google-deepmind/acme/tree/master/acme/agents/tf/dmpo
 [envs]: https://github.com/TuragaLab/flybody/blob/main/docs/fly-env-examples.ipynb
 [ray-script]: https://github.com/TuragaLab/flybody/blob/main/flybody/train_dmpo_ray.py
 [paper]: https://www.biorxiv.org/content/10.1101/2024.03.11.584515
