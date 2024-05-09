@@ -54,7 +54,7 @@ class DMPOConfig:
     logger_save_csv_data: bool = False
     checkpoint_to_load: Optional[str] = None  # Path to checkpoint.
     checkpoint_max_to_keep: Optional[int] = 1  # None: keep all checkpoints.
-    checkpoint_directory: str = '~/acme/'
+    checkpoint_directory: str | None = '~/acme/'  # None: no checkpointing.
     time_delta_minutes: float = 30
     terminal: str = 'current_terminal'
     replay_table_name: str = reverb_adders.DEFAULT_PRIORITY_TABLE
@@ -117,7 +117,7 @@ class Learner(DistributionalMPOLearner):
 
         self._config = dmpo_config
         self._reverb_client = reverb.Client(replay_server_address)
-        self._label = label  # EXPERIMENTAL, used only to distinguish dummy learner from actual one.
+        self._label = label
 
         def wrapped_network_factory(action_spec):
             networks_dict = network_factory(action_spec)
@@ -144,7 +144,8 @@ class Learner(DistributionalMPOLearner):
             print_fn=self._config.print_fn,  #print_fn #logging.info,
             save_data=self._config.logger_save_csv_data)
 
-        checkpoint_enable = True  # checkpoint and snapshot the learner (saved in ~/acme/)
+        # Maybe checkpoint and snapshot the learner (saved in ~/acme/).
+        checkpoint_enable = self._config.checkpoint_directory is not None
 
         # Have to call superclass constructor in this way.
         # Solved with Ray issue:  https://github.com/ray-project/ray/issues/449
@@ -195,8 +196,10 @@ class Learner(DistributionalMPOLearner):
         pass
 
     def get_checkpoint_dir(self):
-        """Return Checkpointer and Snapshotter directories."""
-        return self._checkpointer._checkpoint_dir, self._snapshotter.directory
+        """Return Checkpointer and Snapshotter directories, if any."""
+        if self._checkpointer is not None:
+            return self._checkpointer._checkpoint_dir, self._snapshotter.directory
+        return None, None
 
     def _make_dataset_iterator(
         self,

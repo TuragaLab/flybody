@@ -43,7 +43,7 @@ class DistributionalMPOLearner(acme.Learner):
         checkpoint_enable: bool = True,
         checkpoint_max_to_keep: Optional[
             int] = 1,  # If None, all checkpoints are kept.
-        directory: str = '~/acme/',
+        directory: str | None = '~/acme/',
         checkpoint_to_load: Optional[str] = None,
         time_delta_minutes: float = 30.,
     ):
