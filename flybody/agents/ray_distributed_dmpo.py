@@ -289,6 +289,7 @@ class EnvironmentLoop(acme.EnvironmentLoop):
         networks.init(environment_spec)
 
         if actor_or_evaluator == 'actor':
+            # Actor: sample from policy_network distribution.
             policy_network = snt.Sequential([
                 networks.observation_network,
                 networks.policy_network,
@@ -298,9 +299,11 @@ class EnvironmentLoop(acme.EnvironmentLoop):
             save_data = False
 
         elif actor_or_evaluator == 'evaluator':
+            # Evaluator: get mean from policy_network distribution.
             policy_network = snt.Sequential([
                 networks.observation_network,
                 networks.policy_network,
+                network_utils.StochasticMeanHead(),
             ])
             adder = None
             save_data = self._config.logger_save_csv_data
