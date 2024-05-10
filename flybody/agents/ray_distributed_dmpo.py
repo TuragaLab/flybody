@@ -43,18 +43,19 @@ class DMPOConfig:
     num_learner_steps: int = 100
     clipping: bool = True
     discount: float = 0.99
-    policy_loss_module: Optional[snt.Module] = None
-    policy_optimizer: Optional[snt.Optimizer] = None
-    critic_optimizer: Optional[snt.Optimizer] = None
-    dual_optimizer: Optional[snt.Optimizer] = None
+    policy_loss_module: snt.Module | None = None
+    policy_optimizer: snt.Optimizer | None = None
+    critic_optimizer: snt.Optimizer | None = None
+    dual_optimizer: snt.Optimizer | None = None
     target_policy_update_period: int = 101
     target_critic_update_period: int = 107
     actor_update_period: int = 1000
+    logger: loggers.base.Logger | None = None
     log_every: float = 60.  # Seconds.
     logger_save_csv_data: bool = False
-    checkpoint_to_load: Optional[str] = None  # Path to checkpoint.
-    checkpoint_max_to_keep: Optional[int] = 1  # None: keep all checkpoints.
-    checkpoint_directory: str | None = '~/acme/'  # None: no checkpointing.
+    checkpoint_to_load: str | None = None  # Path to checkpoint.
+    checkpoint_max_to_keep: int | None = 1  # None: keep all checkpoints.
+    checkpoint_directory: str | None = '~/ray-ckpts/'  # None: no checkpointing.
     time_delta_minutes: float = 30
     terminal: str = 'current_terminal'
     replay_table_name: str = reverb_adders.DEFAULT_PRIORITY_TABLE
@@ -137,12 +138,18 @@ class Learner(DistributionalMPOLearner):
 
         dataset = self._make_dataset_iterator(self._reverb_client)
         counter = counting.Counter(parent=counter, prefix=label)
-        logger = loggers.make_default_logger(
-            label=label,
-            time_delta=self._config.log_every,
-            steps_key=f'{label}_steps',
-            print_fn=self._config.print_fn,  #print_fn #logging.info,
-            save_data=self._config.logger_save_csv_data)
+        if self._config.logger is None:
+            logger = loggers.make_default_logger(
+                label=label,
+                time_delta=self._config.log_every,
+                steps_key=f'{label}_steps',
+                print_fn=self._config.print_fn,
+                save_data=self._config.logger_save_csv_data)
+        else:
+            logger = self._config.logger(
+                label=label,
+                time_delta=self._config.log_every,
+            )
 
         # Maybe checkpoint and snapshot the learner (saved in ~/acme/).
         checkpoint_enable = self._config.checkpoint_directory is not None
@@ -305,13 +312,19 @@ class EnvironmentLoop(acme.EnvironmentLoop):
 
         # Create logger and counter; actors will not spam bigtable.
         counter = counting.Counter(parent=counter, prefix=actor_or_evaluator)
-        logger = loggers.make_default_logger(
-            label=label,
-            save_data=save_data,
-            time_delta=self._config.log_every,
-            steps_key=actor_or_evaluator + '_steps',
-            print_fn=self._config.print_fn,  #print_fn, #logging.info,
-        )
+        if self._config.logger is None:
+            logger = loggers.make_default_logger(
+                label=label,
+                save_data=save_data,
+                time_delta=self._config.log_every,
+                steps_key=actor_or_evaluator + '_steps',
+                print_fn=self._config.print_fn,
+            )
+        else:
+            logger = self._config.logger(
+                label=label,
+                time_delta=self._config.log_every,
+            )
 
         super().__init__(environment, actor, counter, logger)
 
