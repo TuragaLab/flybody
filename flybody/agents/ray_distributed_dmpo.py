@@ -1,6 +1,6 @@
 """Classes for DMPO agent distributed with Ray."""
 
-from typing import Optional, Iterator, Callable
+from typing import Optional, Iterator, Callable, Any
 import socket
 import dataclasses
 import copy
@@ -60,6 +60,7 @@ class DMPOConfig:
     terminal: str = 'current_terminal'
     replay_table_name: str = reverb_adders.DEFAULT_PRIORITY_TABLE
     print_fn: Callable = logging.info
+    userdata: dict | None = None
 
 
 class ReplayServer():
@@ -146,10 +147,14 @@ class Learner(DistributionalMPOLearner):
                 print_fn=self._config.print_fn,
                 save_data=self._config.logger_save_csv_data)
         else:
+            if 'logger_kwargs' in self._config.userdata:
+                logger_kwargs = self._config.userdata['logger_kwargs']
+            else:
+                logger_kwargs = {}
             logger = self._config.logger(
                 label=label,
                 time_delta=self._config.log_every,
-            )
+                **logger_kwargs)
 
         # Maybe checkpoint and snapshot the learner (saved in ~/acme/).
         checkpoint_enable = self._config.checkpoint_directory is not None
@@ -324,10 +329,14 @@ class EnvironmentLoop(acme.EnvironmentLoop):
                 print_fn=self._config.print_fn,
             )
         else:
+            if 'logger_kwargs' in self._config.userdata:
+                logger_kwargs = self._config.userdata['logger_kwargs']
+            else:
+                logger_kwargs = {}
             logger = self._config.logger(
                 label=label,
                 time_delta=self._config.log_every,
-            )
+                **logger_kwargs)
 
         super().__init__(environment, actor, counter, logger)
 
