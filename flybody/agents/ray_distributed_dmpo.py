@@ -1,6 +1,6 @@
 """Classes for DMPO agent distributed with Ray."""
 
-from typing import Optional, Iterator, Callable, Any
+from typing import Optional, Iterator, Callable
 import socket
 import dataclasses
 import copy
