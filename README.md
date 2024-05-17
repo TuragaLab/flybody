@@ -1,5 +1,7 @@
 # `flybody`: fruit fly body model for MuJoCo physics
 
+[![preprint](https://img.shields.io/badge/preprint-bioRxiv-B31B1B)][paper]
+
 <img src="fly-white.png" width="30%">
 
 ![pytest workflow](https://github.com/TuragaLab/flybody/actions/workflows/pytest.yml/badge.svg)
