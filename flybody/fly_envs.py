@@ -191,7 +191,7 @@ def template_task(random_state: np.random.RandomState | None = None,
                   mjcb_control: Callable | None = None,
                   observables_options: dict | None = None,
                   action_corruptor: Callable | None = None):
-    """Fake no-op walking task for testing.
+    """An empty no-op walking task for testing.
 
     Args:
         random_state: Random state for reproducibility.
@@ -220,8 +220,8 @@ def template_task(random_state: np.random.RandomState | None = None,
                         joint_filter=joint_filter,
                         adhesion_filter=adhesion_filter,
                         observables_options=observables_options,
-                        action_corruptor=action_corruptor,
                         mjcb_control=mjcb_control,
+                        action_corruptor=action_corruptor,
                         time_limit=time_limit)
     # Reset control callback, if any.
     mujoco.set_mjcb_control(None)

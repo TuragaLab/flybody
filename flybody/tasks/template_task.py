@@ -15,6 +15,7 @@ class TemplateTask(Walking):
     def __init__(self,
                  claw_friction: float = 1.0,
                  mjcb_control: Callable | None = None,
+                 action_corruptor: Callable | None = None,
                  **kwargs):
         """Template class for walking fly tasks.
 
@@ -23,10 +24,14 @@ class TemplateTask(Walking):
             mjcb_control: Optional MuJoCo control callback, a callable with
                 arguments (model, data). For more information, see
                 https://mujoco.readthedocs.io/en/stable/APIreference/APIglobals.html#mjcb-control
+            action_corruptor (optional): A callable which takes an action as an
+                argument, modifies it, and returns it. An example use case for
+                this is to add random noise to the action.
             **kwargs: Arguments passed to the superclass constructor.
         """
 
         self._mjcb_control = mjcb_control
+        self._action_corruptor = action_corruptor
         super().__init__(add_ghost=False, ghost_visible_legs=False, **kwargs)
 
         # Maybe do something here.
@@ -55,11 +60,15 @@ class TemplateTask(Walking):
                            random_state: np.random.RandomState):
         """Modifies the physics state before the next episode begins."""
         super().initialize_episode(physics, random_state)
+        if self._mjcb_control is not None:
+            self._mjcb_control.reset()
         # Maybe do something here.
 
     def before_step(self, physics: 'mjcf.Physics', action,
                     random_state: np.random.RandomState):
         """A callback which is executed before an agent control step."""
+        if self._action_corruptor is not None:
+            action = self._action_corruptor(action, random_state)
         # Maybe do something here.
         super().before_step(physics, action, random_state)
 

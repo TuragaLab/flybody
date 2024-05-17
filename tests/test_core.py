@@ -73,11 +73,17 @@ def test_ctrl_callback():
 
     dof_ids = [*range(6, 9), *range(42, 53), *range(75, 90)]
     dof_ids_complementary = [i for i in range(108) if i not in dof_ids]
-    def ctrl_callback(model, data):
-        # Add noise to a subset of dofs.
-        qfrc_actuator = data.qfrc_actuator[dof_ids]
-        noise = np.sin(np.arange(len(dof_ids)))
-        data.qfrc_applied[dof_ids] = qfrc_actuator * noise
+
+    class FakeCallback():
+        def __call__(self, model, data):
+            # Add noise to a subset of dofs.
+            qfrc_actuator = data.qfrc_actuator[dof_ids]
+            noise = np.sin(np.arange(len(dof_ids)))
+            data.qfrc_applied[dof_ids] = qfrc_actuator * noise
+        def reset(self):
+            pass
+
+    ctrl_callback = FakeCallback()
     
     env = template_task(mjcb_control=ctrl_callback)
     n_act = env.action_spec().shape
