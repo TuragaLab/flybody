@@ -2,6 +2,8 @@
 
 from typing import Callable
 
+import numpy as np
+
 from acme import adders
 from acme import core
 from acme import types
