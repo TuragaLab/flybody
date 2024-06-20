@@ -19,9 +19,11 @@ from setuptools import setup, find_packages
 #    To install, use: pip install -e .[ray]
 
 core_requirements = [
+    'numpy==1.26.4',
     'dm_control',
     'h5py',
     'pytest',
+    'mediapy',
 ]
 
 tf_requirements = [
