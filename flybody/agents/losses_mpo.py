@@ -25,9 +25,20 @@ class PenalizationCostRealActions():
     """
 
     def __init__(self, action_spec, dtype=tf.float32):
+        """
+        Args:
+            action_spec: Action specs of the original, not canonically-wrapped,
+                environment.
+            dtype: Action datatype.
+        """
         self._scale = tf.constant(action_spec.maximum - action_spec.minimum,
                                   dtype=dtype)
         self._offset = tf.constant(action_spec.minimum, dtype=dtype)
+        assert not all(self._scale == 2) and not all(self._offset == -1), (
+            'With the provided action_spec, the action transformation is no-op.'
+            ' Perhaps this action_spec is from an already wrapped'
+            'canonical environment?'
+        )
 
     def __call__(self, actions: 'tf.tensor'):
         """Calculate penalization cost.
