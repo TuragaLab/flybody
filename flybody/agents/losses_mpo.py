@@ -24,12 +24,13 @@ class PenalizationCostRealActions():
     actions, and then to calculate penalization cost based on real actions.
     """
 
-    def __init__(self, action_spec, dtype=tf.float32):
+    def __init__(self, action_spec, dtype=tf.float32, custom_cost_func=None):
         """
         Args:
             action_spec: Action specs of the original, not canonically-wrapped,
                 environment.
             dtype: Action datatype.
+            custom_cost_func: Optional callable for custom cost calculation.
         """
         self._scale = tf.constant(action_spec.maximum - action_spec.minimum,
                                   dtype=dtype)
@@ -39,6 +40,13 @@ class PenalizationCostRealActions():
             ' Perhaps this action_spec is from an already wrapped'
             'canonical environment?'
         )
+        if custom_cost_func is None:
+            def cost_func(actions):
+                cost = - tf.norm(actions, axis=-1)
+                return cost
+            self._cost_func = cost_func
+        else:
+            self._cost_func = custom_cost_func
 
     def __call__(self, actions: 'tf.tensor'):
         """Calculate penalization cost.
@@ -53,9 +61,7 @@ class PenalizationCostRealActions():
         # Transform canonical actions to real actions.
         actions = 0.5 * (actions + 1)  # In [0, 1].
         actions = actions * self._scale + self._offset
-        # Get cost.
-        cost = -tf.norm(actions, axis=-1)
-        return cost
+        return self._cost_func(actions)
 
 
 class MPO(snt.Module):
