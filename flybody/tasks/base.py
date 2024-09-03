@@ -334,11 +334,13 @@ class Walking(FruitFlyTask):
 
     def __init__(
         self,
+        adhesion_gain: float | None = None,
         **kwargs,
     ):
         """Base class for setting fly model configuration for walking tasks.
 
         Args:
+            adhesion_gain: Optionally, change the default adhesion actuator gain.
             **kwargs: Arguments passed to the superclass constructor.
         """
 
@@ -349,6 +351,10 @@ class Walking(FruitFlyTask):
                          physics_timestep=_WALK_PHYSICS_TIMESTEP,
                          control_timestep=_WALK_CONTROL_TIMESTEP,
                          **kwargs)
+
+        if adhesion_gain is not None:
+            self._walker.mjcf_model.find(
+                'default', 'adhesion_claw').adhesion.gain = adhesion_gain
 
         # Set floor contact params.
         for geom in self._arena.ground_geoms:
