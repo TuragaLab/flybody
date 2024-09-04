@@ -6,6 +6,9 @@ from abc import ABC, abstractmethod
 import h5py
 import numpy as np
 
+from flybody.tasks.synthetic_trajectories import constant_speed_trajectory
+from flybody.tasks.constants import _WALK_CONTROL_TIMESTEP
+
 
 class HDF5TrajectoryLoader(ABC):
     """Base class for loading and serving trajectories from hdf5 datasets."""
@@ -216,14 +219,21 @@ class InferenceWalkingTrajectoryLoader():
     This trajectory loader can be used for bypassing loading actual walking
     datasets and loading custom trajectories instead, e.g. at inference time.
 
-    To use this class, create qpos and qvel for your custom trajectory and then
-    set this trajectory for loading in the walking task by calling:
-    env.task._traj_generator.set_next_trajectory(qpos, qvel)
+    A simple synthetic walking trajectory is automatically set upon this class
+    initialization.
+
+    To use this class with other custom trajectories, create qpos and qvel for
+    your custom trajectory and then set this trajectory for loading in the
+    walking task by calling:
+        env.task._traj_generator.set_next_trajectory(qpos, qvel)
     """
 
     def __init__(self):
-        # Nothing here!
-        pass
+        # Initially, set a simple synthetic trajectory, e.g. for quick testing.
+        qpos, qvel = constant_speed_trajectory(
+            n_steps=300, speed=2, init_pos=(0, 0, 0.1278),
+            control_timestep=_WALK_CONTROL_TIMESTEP)
+        self.set_next_trajectory(qpos, qvel)
 
     def set_next_trajectory(self, qpos: np.ndarray, qvel: np.ndarray):
         """Set new trajectory to be returned by get_trajectory.
