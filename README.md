@@ -9,7 +9,7 @@
 ![lint](https://github.com/TuragaLab/flybody/actions/workflows/lint.yml/badge.svg)
 ![tf](https://github.com/TuragaLab/flybody/actions/workflows/tf-test.yml/badge.svg)
 
-`flybody` is an anatomically-detailed body model of the fruit fly _Drosophila melanogaster_ for [MuJoCo][mujoco] physics simulator and reinforcement learning applications. 
+`flybody` is an anatomically-detailed body model of the fruit fly [_Drosophila melanogaster_][drosophila_wikipedia] for [MuJoCo][mujoco] physics simulator and reinforcement learning applications. 
 
 The fly model was developed in a collaborative effort by Google DeepMind and HHMI Janelia Research Campus. 
 
@@ -47,6 +47,7 @@ Also, [this notebook][envs] shows examples of the flight, walking, and vision-gu
 To train the fly, try the [distributed RL training script][ray-script], which uses [Ray][ray] to parallelize the [DMPO][dmpo] agent training.
 
 [fly-home]: https://github.com/TuragaLab/flybody/tree/main/flybody/fruitfly/assets
+[drosophila_wikipedia]: https://en.wikipedia.org/wiki/Drosophila_melanogaster
 [mujoco]: https://github.com/google-deepmind/mujoco
 [tutorial]: https://github.com/TuragaLab/flybody/blob/main/docs/getting-started.ipynb
 [tutorial-colab]: https://colab.research.google.com/github/TuragaLab/flybody/blob/main/docs/getting-started.ipynb
