@@ -335,6 +335,9 @@ class DistributionalMPOLearner(acme.Learner):
 
         if self._snapshotter is not None:
             if self._snapshotter.save():
+                # Log at what actor_steps this snapshot was saved.
+                if 'actor_steps' in fetches:
+                    fetches['saved_snapshot_at_actor_steps'] = fetches['actor_steps']
                 # Increment the snapshot counter (directly in the snapshotter's path).
                 for path in list(self._snapshotter._snapshots.keys()):
                     snapshot = self._snapshotter._snapshots[path]  # noqa: F841
