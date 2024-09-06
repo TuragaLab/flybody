@@ -335,9 +335,11 @@ class DistributionalMPOLearner(acme.Learner):
 
         if self._snapshotter is not None:
             if self._snapshotter.save():
-                # Log at what actor_steps this snapshot was saved.
-                if 'actor_steps' in fetches:
-                    fetches['saved_snapshot_at_actor_steps'] = fetches['actor_steps']
+                # Log at what actor_steps this snapshot was saved. The actor_steps
+                # counter is updated at end of episode so fetches['actor_steps']
+                # may not exist yet when the first policy snapshot is saved.
+                actor_steps = fetches['actor_steps'] if 'actor_steps' in fetches else 0
+                fetches['saved_snapshot_at_actor_steps'] = actor_steps
                 # Increment the snapshot counter (directly in the snapshotter's path).
                 for path in list(self._snapshotter._snapshots.keys()):
                     snapshot = self._snapshotter._snapshots[path]  # noqa: F841
