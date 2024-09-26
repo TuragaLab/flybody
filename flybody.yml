@@ -1,7 +1,0 @@
-name: flybody
-dependencies:
-  - python=3.10
-  - pip
-  - ipython
-  - cudatoolkit
-  - cudnn=8.2.1=cuda11.3_0

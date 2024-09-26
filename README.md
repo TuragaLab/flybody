@@ -70,7 +70,7 @@ Follow these steps to install `flybody`:
    ```bash
    git clone https://github.com/TuragaLab/flybody.git
    cd flybody
-   conda env create -f flybody.yml
+   conda create --name flybody -c conda-forge python=3.10 pip ipython cudatoolkit=11.8.0
    conda activate flybody
    ```
    `flybody` can be installed in one of the three modes described next. Also, for installation in editable (developer) mode, use the commands as shown. For installation in regular, not editable, mode, drop the `-e` flag.
@@ -96,7 +96,7 @@ Follow these steps to install `flybody`:
 ### Option 2: Installation from remote repo
 1. Create a new conda environment:
    ```bash
-   conda create --name flybody python=3.10 pip ipython cudatoolkit cudnn=8.2.1=cuda11.3_0
+   conda create --name flybody -c conda-forge python=3.10 pip ipython cudatoolkit=11.8.0
    conda activate flybody
    ```
    Proceed with installation in one of the three modes (described above):
