@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flybody"
+version = "0.1.0"
+dependencies = [
+    "numpy==1.26.4",
+    "dm_control",
+    "h5py",
+    "pytest",
+    "mediapy",
+]
+requires-python = ">=3.10"
+authors = [
+  {name = "Roman Vaxenburg", email="vaxenburgr@hhmi.org"},
+  {name = "Gert-Jan Both", email="bothg@hhmi.org"},
+  {name = "Yuval Tassa", email="tassa@google.com"},
+  {name = "Zinovia Stefanidi", email="zinovia.stefanidi@uni-tuebingen.de"},
+]
+description = "MuJoCo fruit fly body model and reinforcement learning tasks."
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["mujoco", "reinforcement learning", "flybody"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+]
+
+[project.urls]
+repository = "https://github.com/TuragaLab/flybody"
+
+[project.optional-dependencies]
+tf = [
+    "dm-acme[tf,envs,jax]",
+    "nvidia-cudnn-cu11==8.9.*",
+    "tensorflow==2.8.0",
+    "tensorflow-probability==0.16.0",
+    "dm-reverb==0.7.0",
+]
+ray = [
+    "flybody[tf]",
+    "ray[default]",
+]
+dev = [
+    "ruff",
+    "jupyterlab",
+    "tqdm",
+]
+all = ["flybody[ray,dev]"]
+
+[tool.setuptools.packages.find]
+include = ["flybody*"]
+namespaces = false
+
+[tool.setuptools.package-data]
+flybody = ["fruitfly/assets/*.obj", "fruitfly/assets/*.xml"]

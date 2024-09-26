@@ -58,7 +58,7 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--test',
+parser.add_argument('--test', '-t',
     help='Run job in test mode with one actor and output to current terminal.',
     action='store_true')
 args = parser.parse_args()
@@ -99,7 +99,9 @@ environment_spec = specs.make_environment_spec(dummy_env)
 
 # This callable will be calculating penalization cost by converting canonical
 # actions to real (not wrapped) environment actions inside DMPO agent.
-penalization_cost = PenalizationCostRealActions(dummy_env.action_spec())
+# Note that we need the action_spec of the underlying environment so we unwrap
+# with dummy_env._environment.
+penalization_cost = PenalizationCostRealActions(dummy_env._environment.action_spec())
 
 # Distributed DMPO agent configuration.
 dmpo_config = DMPOConfig(
@@ -113,13 +115,13 @@ dmpo_config = DMPOConfig(
     n_step=5,
     num_samples=20,
     policy_loss_module=policy_loss_module_dmpo(
-                            epsilon=0.1,
-                            epsilon_mean=0.0025,
-                            epsilon_stddev=1e-7,
-                            action_penalization=True,
-                            epsilon_penalty=0.1,
-                            penalization_cost=penalization_cost,
-                        ),
+        epsilon=0.1,
+        epsilon_mean=0.0025,
+        epsilon_stddev=1e-7,
+        action_penalization=True,
+        epsilon_penalty=0.1,
+        penalization_cost=penalization_cost,
+    ),
     policy_optimizer=snt.optimizers.Adam(1e-4),
     critic_optimizer=snt.optimizers.Adam(1e-4),
     dual_optimizer=snt.optimizers.Adam(1e-3),
