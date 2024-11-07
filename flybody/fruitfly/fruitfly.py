@@ -129,6 +129,7 @@ class FruitFly(legacy_base.Walker):
         use_antennae: bool = False,
         joint_filter: float = 0.01,
         adhesion_filter: float = 0.007,
+        dyntype_filterexact: bool = False,
         body_pitch_angle: float = 47.5,
         stroke_plane_angle: float = 0.,
         physics_timestep: float = 1e-4,
@@ -147,6 +148,9 @@ class FruitFly(legacy_base.Walker):
             use_antennae: Whether to use the antennae.
             joint_filter: Timescale of filter for joint actuators. 0: disabled.
             adhesion_filter: Timescale of filter for adhesion actuators. 0: disabled.
+            dyntype_filterexact: When joint or adhesion filters are enabled, whether
+                to use exact-integration activation dyntype `filterexact`.
+                If False, use approximate `filter` dyntype.
             body_pitch_angle: Body pitch angle for initial flight pose, relative to
                 ground, degrees. 0: horizontal body position. Default value from
                 https://doi.org/10.1126/science.1248955
@@ -295,15 +299,16 @@ class FruitFly(legacy_base.Walker):
                 change_body_frame(body, body.pos, new_wing_quat)
 
         # === Maybe change actuator dynamics to `filter`.
+        dyntype = 'filterexact' if dyntype_filterexact else 'filter'
         if joint_filter > 0:
             for actuator in root.find_all('actuator'):
                 if actuator.tag != 'adhesion':
-                    actuator.dyntype = 'filter'
+                    actuator.dyntype = dyntype
                     actuator.dynprm = (joint_filter, )
         if adhesion_filter > 0:
             for actuator in root.find_all('actuator'):
                 if actuator.tag == 'adhesion':
-                    actuator.dclass.parent.general.dyntype = 'filter'
+                    actuator.dclass.parent.general.dyntype = dyntype
                     actuator.dclass.parent.general.dynprm = (adhesion_filter, )
 
         # === Get action-class indices into the MuJoCo control vector.
