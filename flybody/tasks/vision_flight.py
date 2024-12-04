@@ -133,6 +133,10 @@ class VisionFlightImitationWBPG(Flying):
         # Initialize wing qpos.
         physics.bind(self._wing_joints).qpos = init_wing_qpos
 
+        # If enabled, initialize leg joint angles in retracted position.
+        if self._leg_joints:
+            physics.bind(self._leg_joints).qpos = self._leg_springrefs
+
         if self._initialize_qvel:
             # Only initialize linear CoM velocity, not rotational velocity.
             init_vel, _ = self._walker.get_velocity(physics)
@@ -178,12 +182,12 @@ class VisionFlightImitationWBPG(Flying):
                     'x_coords'][-1]:
                 idx = (np.abs(trench_specs['x_coords'] - xpos[0])).argmin()
                 trench_center = trench_specs['y_coords'][idx]
-                center_of_trench = rewards.tolerance(xpos[1],
-                                                     bounds=(trench_center,
-                                                             trench_center),
-                                                     sigmoid='linear',
-                                                     margin=0.15,
-                                                     value_at_margin=0.0)
+                center_of_trench = rewards.tolerance(
+                    xpos[1],
+                    bounds=(trench_center, trench_center),
+                    sigmoid='linear',
+                    margin=0.15,
+                    value_at_margin=0.0)
 
         # Preferred absolute flight direction.
         x_speed = rewards.tolerance(velocity[0],
@@ -217,8 +221,16 @@ class VisionFlightImitationWBPG(Flying):
                                         margin=np.pi,
                                         value_at_margin=0.0)
 
+        # Reward for leg retraction during flight.
+        qpos_diff = physics.bind(self._leg_joints).qpos - self._leg_springrefs
+        retract_legs = rewards.tolerance(qpos_diff,
+                                         bounds=(0, 0),
+                                         sigmoid='linear',
+                                         margin=4.,
+                                         value_at_margin=0.0)
+
         return np.hstack((height, x_speed, speed, side_speed, world_zaxis,
-                          center_of_trench))
+                          center_of_trench, retract_legs))
 
     def check_floor_contact(self, physics):
         """Check if fly collides with floor geom."""
