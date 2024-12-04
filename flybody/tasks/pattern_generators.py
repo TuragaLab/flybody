@@ -1,6 +1,5 @@
 """Wing beat pattern generators for fly tasks."""
 
-from typing import Optional
 import numpy as np
 
 from flybody.tasks.constants import (_WING_PARAMS, _FLY_CONTROL_TIMESTEP)
@@ -17,7 +16,7 @@ class WingBeatPatternGenerator():
 
     def __init__(
         self,
-        base_pattern_path: str,
+        base_pattern_path: str | None = None,
         base_beat_freq=_WING_PARAMS['base_freq'],
         rel_freq_range=_WING_PARAMS['rel_freq_range'],
         num_freqs=_WING_PARAMS['num_freqs'],
@@ -32,6 +31,9 @@ class WingBeatPatternGenerator():
           base_pattern_path: Path to one cycle of 'base' wing kinematic data,
               a np.array of shape (timesteps, 3). The order of wing joints is
               yaw, roll, pitch. Sampling frequency does not have to match dt_ctrl.
+              If not provided, a simple approximation will be generated (see
+              equations below). This approximation can be used for prototyping
+              and testing, but is not a substitute for a realistic base wing pattern.
           base_beat_freq: Mean beat frequency for the requested range of
               frequencies, Hz.
           rel_freq_range: Relative frequency range. For example, 0.1 means
@@ -48,11 +50,18 @@ class WingBeatPatternGenerator():
           ctrl_filter: Time constant of control signal filter, seconds.
               0: not used.
         """
-        # Load base pattern for WBPG, shape (timesteps, 3).
-        with open(base_pattern_path, 'rb') as f:
-            base_pattern = np.load(f)
-        base_pattern = np.tile(base_pattern,
-                               (1, 2))  # Duplicate for two wings.
+        if base_pattern_path is None:
+            # Generate a simple artificial base wing pattern approximation.
+            x = np.linspace(0, 2*np.pi, 500)
+            yaw = 1.1 * np.sin(x-np.pi/2) + 0.3
+            roll = 0.25 * np.sin(1.5*x) - 0.1
+            pitch = 1.35 * np.sin(x) + 0.8
+            base_pattern = np.vstack((yaw, roll, pitch)).T  # Shape (500, 3).
+        else:
+            # Load base pattern for WBPG, shape (timesteps, 3).
+            with open(base_pattern_path, 'rb') as f:
+                base_pattern = np.load(f)
+        base_pattern = np.tile(base_pattern, (1, 2))  # Duplicate for two wings.
 
         self.base_beat_freq = base_beat_freq
         self.rel_freq_range = rel_freq_range
@@ -120,7 +129,7 @@ class WingBeatPatternGenerator():
             })
 
     def reset(self,
-              ctrl_freq: Optional[float] = None,
+              ctrl_freq: float | None = None,
               initial_phase: float = 0.,
               return_qvel: bool = False) -> np.ndarray:
         """Reset wing sequence to step 0 and set initial phase.
