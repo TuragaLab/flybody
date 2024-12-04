@@ -33,9 +33,9 @@ class FruitFlyTask(composer.Task, ABC):
         use_antennae: bool,
         physics_timestep: float,
         control_timestep: float,
-        force_actuators: bool,
         joint_filter: float,
         adhesion_filter: float = 0.007,
+        force_actuators: bool = False,
         body_pitch_angle: float = _BODY_PITCH_ANGLE,
         stroke_plane_angle: float = 0,
         add_ghost: bool = False,
@@ -60,9 +60,9 @@ class FruitFlyTask(composer.Task, ABC):
             use_antennae: Whether the antennae are active.
             physics_timestep: Physics timestep to use for simulation.
             control_timestep: Control timestep.
-            force_actuators: Whether to use force or position actuators.
             joint_filter: Timescale of filter for joint actuators. 0: disabled.
             adhesion_filter: Timescale of filter for adhesion actuators. 0: disabled.
+            force_actuators: Whether to use force or position actuators.
             body_pitch_angle: Body pitch angle for initial flight pose, relative to
                 ground, degrees. 0: horizontal body position. Default value from
                 https://doi.org/10.1126/science.1248955
