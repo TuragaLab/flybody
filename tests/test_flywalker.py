@@ -7,6 +7,7 @@ from dm_control import mjcf
 from dm_control.composer.observation.observable import base as observable_base
 
 from flybody.fruitfly.fruitfly import FruitFly
+from .common import is_force_actuator
 
 
 TEST_ACTION = 0.3561
@@ -118,6 +119,19 @@ def test_fly_bulletproof():
                 elif 'user' in name:
                     assert action_spec.minimum[i] == -1
                     assert action_spec.maximum[i] == 1
+
+
+def test_force_actuators():
+    """Test switching to force actuators."""
+    fly = FruitFly(use_legs=True,
+                   use_wings=True,
+                   use_mouth=True,
+                   use_antennae=True,
+                   joint_filter=0.01,
+                   adhesion_filter=0.02,
+                   force_actuators=True)
+    physics = mjcf.Physics.from_mjcf_model(fly.mjcf_model)
+    assert is_force_actuator(physics)
 
 
 def test_filterexact():
