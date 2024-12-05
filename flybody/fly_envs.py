@@ -1,6 +1,6 @@
 """Create examples of flight and walking task environments for fruitfly."""
 
-from typing import Callable
+from typing import Callable, Sequence
 
 import numpy as np
 
@@ -23,18 +23,40 @@ from flybody.tasks.trajectory_loaders import (
     HDF5FlightTrajectoryLoader,
     HDF5WalkingTrajectoryLoader,
     InferenceWalkingTrajectoryLoader,
+    InferenceFlightTrajectoryLoader,
 )
 
 
-def flight_imitation(wpg_pattern_path: str,
-                     ref_path: str,
+def flight_imitation(ref_path: str | None = None,
+                     wpg_pattern_path: str | None = None,
+                     force_actuators: bool = False,
+                     disable_legs: bool = True,
+                     traj_indices: Sequence[int] | None = None,
+                     randomize_start_step: bool = True,
+                     joint_filter: float = 0.,
+                     future_steps: int = 5,
                      random_state: np.random.RandomState | None = None,
                      terminal_com_dist: float = 2.0):
     """Requires a fruitfly to track a flying reference.
   
     Args:
-        wpg_pattern_path: Path to baseline wing beat pattern for WPG.
-        ref_path: Path to reference trajectory dataset.
+        ref_path: Path to reference trajectory dataset. If None, task will
+            run with InferenceFlightTrajectoryLoader, without loading actual
+            flight dataset.
+        wpg_pattern_path: Path to baseline wing beat pattern for WPG. If None,
+            a simple approximate wing pattern will be generated in the
+            WingBeatPatternGenerator class (could be used for testing).
+        force_actuators: Whether to use force actuators or position actuators
+            for everything other than wings. Wings always use force actuators.
+        disable_legs: Whether to retract and disable legs. This includes
+            removing leg DoFs, actuators, and sensors.
+        traj_indices: List of trajectory indices to use, e.g. for train/test
+            splitting etc. If None, use all available trajectories.
+        randomize_start_step: Whether to select random start point in each
+            get_trajectory call in trajectory loader.
+        joint_filter: Time constant of joint actuator filter. 0: disabled.
+        future_steps: Number of future steps of reference trajectory to provide
+            as observables. Zero means only the current step is used.
         random_state: Random state for reproducibility.
         terminal_com_dist: Episode will be terminated when distance from model
             CoM to ghost CoM exceeds terminal_com_dist. Can be float('inf').
@@ -47,8 +69,14 @@ def flight_imitation(wpg_pattern_path: str,
     arena = floors.Floor()
     # Initialize wing pattern generator and flight trajectory loader.
     wbpg = WingBeatPatternGenerator(base_pattern_path=wpg_pattern_path)
-    traj_generator = HDF5FlightTrajectoryLoader(path=ref_path,
-                                                random_state=random_state)
+    if ref_path is not None:
+        traj_generator = HDF5FlightTrajectoryLoader(
+            path=ref_path,
+            traj_indices=traj_indices,
+            randomize_start_step=randomize_start_step,
+            random_state=random_state)
+    else:
+        traj_generator = InferenceFlightTrajectoryLoader()
     # Build the task.
     time_limit = 0.6
     task = FlightImitationWBPG(walker=walker,
@@ -57,9 +85,11 @@ def flight_imitation(wpg_pattern_path: str,
                                traj_generator=traj_generator,
                                terminal_com_dist=terminal_com_dist,
                                initialize_qvel=True,
+                               force_actuators=force_actuators,
+                               disable_legs=disable_legs,
                                time_limit=time_limit,
-                               joint_filter=0.,
-                               future_steps=5)
+                               joint_filter=joint_filter,
+                               future_steps=future_steps)
 
     return composer.Environment(time_limit=time_limit,
                                 task=task,
@@ -68,17 +98,28 @@ def flight_imitation(wpg_pattern_path: str,
 
 
 def walk_imitation(ref_path: str | None = None,
+                   force_actuators: bool = False,
+                   disable_wings: bool = True,
+                   traj_indices: Sequence[int] | None = None,
                    random_state: np.random.RandomState | None = None,
-                   terminal_com_dist: float = 0.3):
+                   terminal_com_dist: float = 0.3,
+                   joint_filter: float = 0.01):
     """Requires a fruitfly to track a reference walking fly.
 
     Args:
         ref_path: Path to reference trajectory dataset. If not provided, task
             will run in inference mode with InferenceWalkingTrajectoryLoader,
             without loading actual walking dataset.
+        force_actuators: Whether to use force or position actuators.
+        disable_wings: Whether to retract and disable wings. This includes
+            removing wing DoFs, actuators, and sensors.
+        traj_indices: List of trajectory indices to use, e.g. for train/test
+            splitting etc. If None, use all available trajectories.
         random_state: Random state for reproducibility.
         terminal_com_dist: Episode will be terminated when distance from model
             CoM to ghost CoM exceeds terminal_com_dist. Can be float('inf').
+        joint_filter: Timescale of filter for joint actuators. 0: disabled.
+
     Returns:
         Environment for walking tracking task.
     """
@@ -89,7 +130,7 @@ def walk_imitation(ref_path: str | None = None,
     if ref_path is not None:
         inference_mode = False
         traj_generator = HDF5WalkingTrajectoryLoader(
-            path=ref_path, random_state=random_state)
+            path=ref_path, random_state=random_state, traj_indices=traj_indices)
     else:
         inference_mode = True
         traj_generator = InferenceWalkingTrajectoryLoader()
@@ -102,7 +143,9 @@ def walk_imitation(ref_path: str | None = None,
                          mocap_joint_names=traj_generator.get_joint_names(),
                          mocap_site_names=traj_generator.get_site_names(),
                          inference_mode=inference_mode,
-                         joint_filter=0.01,
+                         force_actuators=force_actuators,
+                         disable_wings=disable_wings,
+                         joint_filter=joint_filter,
                          future_steps=64,
                          time_limit=time_limit)
 
@@ -112,10 +155,15 @@ def walk_imitation(ref_path: str | None = None,
                                 strip_singleton_obs_buffer_dim=True)
 
 
-def walk_on_ball(random_state: np.random.RandomState | None = None):
+def walk_on_ball(force_actuators: bool = False,
+                 disable_wings: bool = True,
+                 random_state: np.random.RandomState | None = None):
     """Requires a tethered fruitfly to walk on a floating ball.
 
     Args:
+        force_actuators: Whether to use force or position actuators.
+        disable_wings: Whether to retract and disable wings. This includes
+            removing wing DoFs, actuators, and sensors.
         random_state: Random state for reproducibility.
 
     Returns:
@@ -131,6 +179,8 @@ def walk_on_ball(random_state: np.random.RandomState | None = None):
     time_limit = 2.
     task = WalkOnBall(walker=walker,
                       arena=arena,
+                      force_actuators=force_actuators,
+                      disable_wings=disable_wings,
                       joint_filter=0.01,
                       adhesion_filter=0.007,
                       time_limit=time_limit)
@@ -141,16 +191,26 @@ def walk_on_ball(random_state: np.random.RandomState | None = None):
                                 strip_singleton_obs_buffer_dim=True)
 
 
-def vision_guided_flight(wpg_pattern_path: str,
+def vision_guided_flight(wpg_pattern_path: str | None = None,
                          bumps_or_trench: str = 'bumps',
+                         force_actuators: bool = False,
+                         disable_legs: bool = True,
                          random_state: np.random.RandomState | None = None,
+                         joint_filter: float = 0.,
                          **kwargs_arena):
     """Vision-guided flight tasks: 'bumps' and 'trench'.
 
     Args:
-        wpg_pattern_path: Path to baseline wing beat pattern for WPG.
+        wpg_pattern_path: Path to baseline wing beat pattern for WPG. If None,
+            a simple approximate wing pattern will be generated in the
+            WingBeatPatternGenerator class (could be used for testing).
         bumps_or_trench: Whether to create 'bumps' or 'trench' vision task.
+        force_actuators: Whether to use force actuators or position actuators
+            for everything other than wings. Wings always use force actuators.
+        disable_legs: Whether to retract and disable legs. This includes
+            removing leg DoFs, actuators, and sensors.
         random_state: Random state for reproducibility.
+        joint_filter: Timescale of filter for joint actuators. 0: disabled.
         kwargs_arena: kwargs to be passed on to arena.
 
     Returns:
@@ -174,7 +234,9 @@ def vision_guided_flight(wpg_pattern_path: str,
                                      arena=arena,
                                      wbpg=wbpg,
                                      time_limit=time_limit,
-                                     joint_filter=0.,
+                                     force_actuators=force_actuators,
+                                     disable_legs=disable_legs,
+                                     joint_filter=joint_filter,
                                      floor_contacts=True,
                                      floor_contacts_fatal=True)
 
@@ -185,6 +247,8 @@ def vision_guided_flight(wpg_pattern_path: str,
 
 
 def template_task(random_state: np.random.RandomState | None = None,
+                  force_actuators: bool = False,
+                  disable_wings: bool = True,
                   joint_filter: float = 0.01,
                   adhesion_filter: float = 0.007,
                   time_limit: float = 1.,
@@ -195,6 +259,9 @@ def template_task(random_state: np.random.RandomState | None = None,
 
     Args:
         random_state: Random state for reproducibility.
+        force_actuators: Whether to use force or position actuators.
+        disable_wings: Whether to retract and disable wings. This includes
+            removing wing DoFs, actuators, and sensors.
         joint_filter: Timescale of filter for joint actuators. 0: disabled.
         adhesion_filter: Timescale of filter for adhesion actuators. 0: disabled.
         time_limit: Episode time limit.
@@ -217,6 +284,8 @@ def template_task(random_state: np.random.RandomState | None = None,
     # Build a no-op task.
     task = TemplateTask(walker=walker,
                         arena=arena,
+                        force_actuators=force_actuators,
+                        disable_wings=disable_wings,
                         joint_filter=joint_filter,
                         adhesion_filter=adhesion_filter,
                         observables_options=observables_options,

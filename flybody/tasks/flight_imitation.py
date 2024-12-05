@@ -139,6 +139,10 @@ class FlightImitationWBPG(Flying):
             # Only initialize linear CoM velocity, not rotational velocity.
             self._walker.set_velocity(physics, self._ref_qvel[0, :3])
 
+        # If enabled, initialize leg joint angles in retracted position.
+        if self._leg_joints:
+            physics.bind(self._leg_joints).qpos = self._leg_springrefs
+
     def before_step(self, physics: 'mjcf.Physics', action,
                     random_state: np.random.RandomState):
         """Combine action with WPG base pattern. Update ghost pos and vel."""
@@ -186,7 +190,15 @@ class FlightImitationWBPG(Flying):
                                       margin=np.pi,
                                       value_at_margin=0.0)
 
-        return np.hstack((displacement, quat_dist))
+        # Reward for leg retraction. If legs are disabled, this reward term is 1.
+        qpos_diff = physics.bind(self._leg_joints).qpos - self._leg_springrefs
+        retract_legs = rewards.tolerance(qpos_diff,
+                                         bounds=(0, 0),
+                                         sigmoid='linear',
+                                         margin=4.,
+                                         value_at_margin=0.0)
+
+        return np.hstack((displacement, quat_dist, retract_legs))
 
     def check_termination(self, physics: 'mjcf.Physics') -> bool:
         """Check various termination conditions."""

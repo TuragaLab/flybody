@@ -4,13 +4,15 @@
 from typing import Sequence
 import numpy as np
 
+from dm_control.utils import rewards
+
 from flybody.tasks.base import Walking
 from flybody.tasks.constants import (_TERMINAL_ANGVEL, _TERMINAL_LINVEL)
 from flybody.tasks.rewards import (get_reference_features, get_walker_features,
                                    reward_factors_deep_mimic)
 from flybody.tasks.trajectory_loaders import HDF5WalkingTrajectoryLoader
 from flybody.tasks.task_utils import (add_trajectory_sites,
-                                      update_trajectory_sites, retract_wings)
+                                      update_trajectory_sites)
 from flybody.quaternions import rotate_vec_with_quat
 
 
@@ -119,8 +121,8 @@ class WalkImitation(Walking):
         if self._initialize_qvel:
             physics.bind(self._mocap_joints).qvel = self._ref_qvel[0, :]
 
-        # Retract wings.
-        retract_wings(physics)
+        # If enabled, initialize wing joint angles in retracted position.
+        physics.bind(self._wing_joints).qpos = self._wing_springrefs
 
         # Rotate ghost offset, depending on initial reference orientation.
         rotated_offset = rotate_vec_with_quat(self._ghost_offset,
@@ -149,8 +151,11 @@ class WalkImitation(Walking):
 
     def get_reward_factors(self, physics):
         """Returns factorized reward terms."""
+
         if self._inference_mode:
             return (1,)
+
+        # Walking imitation rewards.
         step = round(physics.time() / self.control_timestep)
         walker_ft = get_walker_features(physics, self._mocap_joints,
                                         self._mocap_sites)
@@ -159,6 +164,16 @@ class WalkImitation(Walking):
             walker_features=walker_ft,
             reference_features=reference_ft,
             weights=(20, 1, 1, 1))
+
+        # Reward for wing retraction.
+        qpos_diff = physics.bind(self._wing_joints).qpos - self._wing_springrefs
+        retract_wings = rewards.tolerance(qpos_diff,
+                                          bounds=(0, 0),
+                                          sigmoid='linear',
+                                          margin=3.,
+                                          value_at_margin=0.0)
+        reward_factors = np.hstack((reward_factors, retract_wings))
+
         return reward_factors
 
     def check_termination(self, physics: 'mjcf.Physics') -> bool:

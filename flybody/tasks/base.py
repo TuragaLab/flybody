@@ -11,6 +11,7 @@ from dm_control.composer.observation import observable
 
 from flybody.quaternions import get_dquat_local
 from flybody.tasks.task_utils import make_ghost_fly
+from flybody.utils import any_substr_in_str
 from flybody.tasks.constants import (_FLY_PHYSICS_TIMESTEP,
                                      _FLY_CONTROL_TIMESTEP, _BODY_PITCH_ANGLE,
                                      _WALK_PHYSICS_TIMESTEP,
@@ -34,6 +35,7 @@ class FruitFlyTask(composer.Task, ABC):
         control_timestep: float,
         joint_filter: float,
         adhesion_filter: float = 0.007,
+        force_actuators: bool = False,
         body_pitch_angle: float = _BODY_PITCH_ANGLE,
         stroke_plane_angle: float = 0,
         add_ghost: bool = False,
@@ -60,6 +62,7 @@ class FruitFlyTask(composer.Task, ABC):
             control_timestep: Control timestep.
             joint_filter: Timescale of filter for joint actuators. 0: disabled.
             adhesion_filter: Timescale of filter for adhesion actuators. 0: disabled.
+            force_actuators: Whether to use force or position actuators.
             body_pitch_angle: Body pitch angle for initial flight pose, relative to
                 ground, degrees. 0: horizontal body position. Default value from
                 https://doi.org/10.1126/science.1248955
@@ -107,6 +110,7 @@ class FruitFlyTask(composer.Task, ABC):
                               use_wings=use_wings,
                               use_mouth=use_mouth,
                               use_antennae=use_antennae,
+                              force_actuators=force_actuators,
                               joint_filter=joint_filter,
                               adhesion_filter=adhesion_filter,
                               body_pitch_angle=body_pitch_angle,
@@ -271,6 +275,7 @@ class Flying(FruitFlyTask):
         wing_damping=_WING_PARAMS['damping'],
         fluidcoef=_WING_PARAMS['fluidcoef'],
         floor_contacts: bool = False,
+        disable_legs: bool = True,
         **kwargs,
     ):
         """Base class for setting fly model configuration for flight tasks.
@@ -281,9 +286,11 @@ class Flying(FruitFlyTask):
             wing_damping: Damping of wing joints.
             fluidcoef: Parameters for new MuJoCo fluid model.
             floor_contacts: Whether to use collision detection with floor.
+            disable_legs: Whether to retract and disable legs. This includes
+                removing leg DoFs, actuators, and sensors.
             **kwargs: Arguments passed to the superclass constructor.
         """
-        super().__init__(use_legs=False,
+        super().__init__(use_legs=not disable_legs,
                          use_wings=True,
                          use_mouth=False,
                          use_antennae=False,
@@ -325,8 +332,33 @@ class Flying(FruitFlyTask):
         wing_default_joint.stiffness = wing_stiffness
         wing_default_joint.damping = wing_damping
 
+        # Exclude wing-leg collisions.
+        contact = self._walker.mjcf_model.contact
+        for body in self._walker.mjcf_model.find_all('body'):
+            if any_substr_in_str(['coxa', 'femur', 'tibia', 'tarsus', 'claw'], 
+                                 body.name):
+                for wing in ['wing_left', 'wing_right']:
+                    contact.add('exclude', 
+                                name=f'{body.name}_{wing}', 
+                                body1=body.name, body2=wing)
+
+        # Get springref angles for retracted leg position.
+        self._leg_joints = []
+        self._leg_springrefs = []
+        for joint in self._walker.mjcf_model.find_all('joint'):
+            if any_substr_in_str(['coxa', 'femur', 'tibia', 'tarsus'], joint.name):
+                springref = joint.springref or joint.dclass.joint.springref or 0.
+                self._leg_joints.append(joint)
+                self._leg_springrefs.append(springref)
+        if not disable_legs:
+            assert len(self._leg_joints) == 66  # 11 joints per leg.
+
         # Explicitly add/enable/disable additional flying task observables.
         self._walker.observables.thorax_height.enabled = False
+        if not disable_legs:
+            self._walker.observables.appendages_pos.enabled = True
+            self._walker.observables.force.enabled = True
+            self._walker.observables.touch.enabled = True
 
 
 class Walking(FruitFlyTask):
@@ -334,18 +366,21 @@ class Walking(FruitFlyTask):
 
     def __init__(
         self,
+        disable_wings: bool = True,
         adhesion_gain: float | None = None,
         **kwargs,
     ):
         """Base class for setting fly model configuration for walking tasks.
 
         Args:
+            disable_wings: Whether to retract and disable wings. This includes
+                removing wing DoFs, actuators, and sensors.
             adhesion_gain: Optionally, change the default adhesion actuator gain.
             **kwargs: Arguments passed to the superclass constructor.
         """
 
         super().__init__(use_legs=True,
-                         use_wings=False,
+                         use_wings=not disable_wings,
                          use_mouth=False,
                          use_antennae=False,
                          physics_timestep=_WALK_PHYSICS_TIMESTEP,
@@ -362,8 +397,29 @@ class Walking(FruitFlyTask):
             geom.solref = (0.001, 1)
             geom.solimp = (0.95, 0.99, 0.01)
 
+        # Exclude wing-leg collisions.
+        contact = self._walker.mjcf_model.contact
+        for body in self._walker.mjcf_model.find_all('body'):
+            if any_substr_in_str(['coxa', 'femur', 'tibia', 'tarsus', 'claw'],
+                                 body.name):
+                for wing in ['wing_left', 'wing_right']:
+                    contact.add('exclude',
+                                name=f'{body.name}_{wing}',
+                                body1=body.name, body2=wing)
+
+        # Get springref angles for retracted wing position.
+        self._wing_joints = []
+        self._wing_springrefs = []
+        for joint in self._walker.mjcf_model.find_all('joint'):
+            if any_substr_in_str(['yaw', 'roll', 'pitch'], joint.name):
+                springref = joint.springref or joint.dclass.joint.springref or 0.
+                self._wing_joints.append(joint)
+                self._wing_springrefs.append(springref)
+        if not disable_wings:
+            assert len(self._wing_joints) == 6
+
         # Explicitly add/enable/disable walking task observables.
         self._walker.observables.appendages_pos.enabled = True
-        self._walker.observables.self_contact.enabled = False
         self._walker.observables.force.enabled = True
         self._walker.observables.touch.enabled = True
+        self._walker.observables.self_contact.enabled = False
