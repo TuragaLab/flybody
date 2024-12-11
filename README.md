@@ -122,7 +122,8 @@ Follow these steps to install `flybody`:
    ```
 2. Also, for the ML and Ray extensions, `LD_LIBRARY_PATH` may require an update, e.g.:
    ```bash
-   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/your/path/to/miniconda3/envs/flybody/lib
+   CUDNN_PATH=$(dirname $(python -c "import nvidia.cudnn;print(nvidia.cudnn.__file__)"))
+   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/:$CUDNN_PATH/lib
    ```
 
 3. You may want to run `pytest` to test the main components of the `flybody` installation.
