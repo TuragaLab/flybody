@@ -19,11 +19,26 @@ class TestPolicyWrapper():
         self._policy = policy
         self._sample = sample
 
-    def __call__(self, observation: types.NestedArray) -> np.ndarray:
+    def __call__(self,
+                 observation: types.NestedArray,
+                 test_mode=False) -> np.ndarray:
+        """Policy forward pass.
+
+        Args:
+            observation: timestep.observation
+            test_mode: In test mode, instead of action, both mean and std are
+                returned.
+
+        Returns:
+            Either action or mean and std.
+        """
         # Add a dummy batch dimension and as a side effect convert numpy to TF,
         # batched_observation: types.NestedTensor.
         batched_observation = tf2_utils.add_batch_dim(observation)
         distribution = self._policy(batched_observation)
+        if test_mode:
+            return (distribution.mean()[0, :].numpy(),
+                    distribution.stddev()[0, :].numpy())
         if self._sample:
             action = distribution.sample()
         else:
