@@ -7,7 +7,18 @@ import requests
 import zipfile
 
 
-def figshare_download(keys: str | list[str]):
+def figshare_download(
+        keys: str | list[str],
+        dest_path: str = 'flybody-data',
+    ):
+    """Download supplementary data from figshare into a specified directory.
+    
+    Args:
+        key: One or more keys into the `urls` dict below, specifying which data
+            to download.
+        dest_path: Destination directory for downloaded data.
+    """
+
     urls = {
         'controller-reuse-checkpoints':
             'https://janelia.figshare.com/ndownloader/files/51196886',
@@ -23,7 +34,7 @@ def figshare_download(keys: str | list[str]):
     for key in keys:
         assert key in urls, ('Invalid key. Only the following keys are supported: ' +
                             ', '.join(urls.keys()))
-        download_and_unzip(urls[key])
+        download_and_unzip(urls[key], dest_path=dest_path)
 
 
 def download_and_unzip(
