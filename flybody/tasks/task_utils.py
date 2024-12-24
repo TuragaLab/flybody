@@ -1,10 +1,28 @@
 """Utils for fly tasks."""
 # ruff: noqa: F821
 
+from collections import OrderedDict
 from typing import Sequence, Callable, Any
+
 import numpy as np
 
 from flybody.quaternions import rotate_vec_with_quat
+
+
+def observable_indices_in_tensor(
+        observation_spec: OrderedDict) -> dict[str, tuple[int, int]]:
+    """Get indices of all observables in tensor by reproducing the name sorting
+    as in tree.flatten and in acme.tf.utils.batch_concat, which is called by
+    our agent.
+    """
+    sorted_names = sorted(list(observation_spec.keys()))
+    idx = 0
+    sorted_obs_dict = {}
+    for name in sorted_names:
+        size = np.prod(observation_spec[name].shape)
+        sorted_obs_dict[name] = (idx, idx+size)
+        idx += size
+    return sorted_obs_dict
 
 
 def get_random_policy(action_spec: 'dm_env.specs.BoundedArray',

@@ -54,7 +54,7 @@ To train the fly, try the [distributed RL training script][ray-script], which us
 [dmpo]: https://github.com/google-deepmind/acme/tree/master/acme/agents/tf/dmpo
 [envs]: https://github.com/TuragaLab/flybody/blob/main/docs/fly-env-examples.ipynb
 [ray-script]: https://github.com/TuragaLab/flybody/blob/main/flybody/train_dmpo_ray.py
-[paper]: https://www.biorxiv.org/content/10.1101/2024.03.11.584515
+[paper]: https://www.biorxiv.org/content/10.1101/2024.03.11.584515v2
 [ray]: https://github.com/ray-project/ray
 [tf]: https://github.com/tensorflow/tensorflow
 [acme]: https://github.com/google-deepmind/acme
@@ -122,7 +122,8 @@ Follow these steps to install `flybody`:
    ```
 2. Also, for the ML and Ray extensions, `LD_LIBRARY_PATH` may require an update, e.g.:
    ```bash
-   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/your/path/to/miniconda3/envs/flybody/lib
+   CUDNN_PATH=$(dirname $(python -c "import nvidia.cudnn;print(nvidia.cudnn.__file__)"))
+   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/:$CUDNN_PATH/lib
    ```
 
 3. You may want to run `pytest` to test the main components of the `flybody` installation.
@@ -134,9 +135,9 @@ See our accompanying [publication][paper]. Thank you for your interest in our fl
   title = {Whole-body simulation of realistic fruit fly locomotion with
            deep reinforcement learning},
   author = {Roman Vaxenburg and Igor Siwanowicz and Josh Merel and Alice A Robie and
-            Carmen Morrow and Guido Novati and Zinovia Stefanidi and Gwyneth M Card and
-            Michael B Reiser and Matthew M Botvinick and Kristin M Branson and
-            Yuval Tassa and Srinivas C Turaga},
+            Carmen Morrow and Guido Novati and Zinovia Stefanidi and Gert-Jan Both and
+            Gwyneth M Card and Michael B Reiser and Matthew M Botvinick and
+            Kristin M Branson and Yuval Tassa and Srinivas C Turaga},
   journal = {bioRxiv},
   doi = {https://doi.org/10.1101/2024.03.11.584515},
   url = {https://www.biorxiv.org/content/10.1101/2024.03.11.584515},
