@@ -19,7 +19,7 @@ def observable_indices_in_tensor(
     idx = 0
     sorted_obs_dict = {}
     for name in sorted_names:
-        size = np.prod(observation_spec[name].shape)
+        size = np.prod(observation_spec[name].shape, dtype=int)
         sorted_obs_dict[name] = (idx, idx+size)
         idx += size
     return sorted_obs_dict
