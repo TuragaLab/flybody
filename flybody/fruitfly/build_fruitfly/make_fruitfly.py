@@ -1135,6 +1135,7 @@ def main(argv: Sequence[str]):
     model.sensor.add('velocimeter', name='velocimeter', site='thorax')
     touch_sites = []
     force_sites = []
+    inflate_caw_site = 1.1  # Inflate for touch sensor active zone.
     for leg in legs:
         for body in leg.find_all('body'):
             if 'claw' in body.name:
@@ -1143,8 +1144,9 @@ def main(argv: Sequence[str]):
                         site = body.add('site',
                                         name=body.name,
                                         dclass='adhesion-collision',
-                                        fromto=geom.fromto,
-                                        size=geom.size * 1.1)
+                                        fromto=geom.fromto * inflate_caw_site,
+                                        size=geom.size * inflate_caw_site,
+                                        )
                         touch_sites.append(site)
             if 'tarsus_' in body.name:
                 site = body.insert('site', -1, name=body.name)
