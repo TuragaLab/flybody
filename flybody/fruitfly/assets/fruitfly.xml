@@ -493,7 +493,7 @@
                       <joint name="tarsus5_T1_left" class="extend_tarsus"/>
                       <geom name="tarsal_claw_T1_left" material="brown" pos="0.00835 -0.0575 -0.118" quat="-0.373 -0.231 -0.468 0.767" mesh="tarsal_claw_T1_left_brown"/>
                       <geom name="tarsal_claw_T1_left_collision" class="adhesion-collision" type="capsule" size="0.00199" fromto="0 0 0 -7.12e-05 0.00906 -0.00081"/>
-                      <site name="claw_T1_left" class="adhesion-collision" size="0.00219" fromto="0 0 0 -7.12e-05 0.00906 -0.00081"/>
+                      <site name="claw_T1_left" class="adhesion-collision" size="0.00219" fromto="0 0 0 -7.84e-05 0.00997 -0.000891"/>
                     </body>
                   </body>
                 </body>
@@ -538,7 +538,7 @@
                       <joint name="tarsus5_T1_right" class="extend_tarsus"/>
                       <geom name="tarsal_claw_T1_right" material="brown" pos="0.0203 0.0495 0.12" quat="-0.529 0.778 0.299 0.16" mesh="tarsal_claw_T1_right_brown"/>
                       <geom name="tarsal_claw_T1_right_collision" class="adhesion-collision" type="capsule" size="0.00199" fromto="0 0 0 0.000765 -0.00899 0.000134"/>
-                      <site name="claw_T1_right" class="adhesion-collision" size="0.00219" fromto="0 0 0 0.000765 -0.00899 0.000134"/>
+                      <site name="claw_T1_right" class="adhesion-collision" size="0.00219" fromto="0 0 0 0.000841 -0.00988 0.000148"/>
                     </body>
                   </body>
                 </body>
@@ -583,7 +583,7 @@
                       <joint name="tarsus5_T2_left" class="extend_tarsus"/>
                       <geom name="tarsal_claw_T2_left" material="brown" pos="-0.0139 -0.13 -0.105" quat="-0.0774 0.0502 -0.342 0.935" mesh="tarsal_claw_T2_left_brown"/>
                       <geom name="tarsal_claw_T2_left_collision" class="adhesion-collision" type="capsule" size="0.002" fromto="0 0 0 3.6e-05 0.00991 -0.000254"/>
-                      <site name="claw_T2_left" class="adhesion-collision" size="0.0022" fromto="0 0 0 3.6e-05 0.00991 -0.000254"/>
+                      <site name="claw_T2_left" class="adhesion-collision" size="0.0022" fromto="0 0 0 3.96e-05 0.0109 -0.00028"/>
                     </body>
                   </body>
                 </body>
@@ -628,7 +628,7 @@
                       <joint name="tarsus5_T2_right" class="extend_tarsus"/>
                       <geom name="tarsal_claw_T2_right" material="brown" pos="0.0133 0.129 0.105" quat="-0.344 0.934 0.0788 -0.0479" mesh="tarsal_claw_T2_right_brown"/>
                       <geom name="tarsal_claw_T2_right_collision" class="adhesion-collision" type="capsule" size="0.002" fromto="0 0 0 -9.66e-05 -0.00988 0.000252"/>
-                      <site name="claw_T2_right" class="adhesion-collision" size="0.0022" fromto="0 0 0 -9.66e-05 -0.00988 0.000252"/>
+                      <site name="claw_T2_right" class="adhesion-collision" size="0.0022" fromto="0 0 0 -0.000106 -0.0109 0.000277"/>
                     </body>
                   </body>
                 </body>
@@ -673,7 +673,7 @@
                       <joint name="tarsus5_T3_left" class="extend_tarsus"/>
                       <geom name="tarsal_claw_T3_left" material="brown" pos="-0.00937 -0.17 -0.111" quat="-0.49 -0.138 0.251 -0.823" mesh="tarsal_claw_T3_left_brown"/>
                       <geom name="tarsal_claw_T3_left_collision" class="adhesion-collision" type="capsule" size="0.0019" fromto="0 0 0 0.000222 0.0111 -0.00108"/>
-                      <site name="claw_T3_left" class="adhesion-collision" size="0.00209" fromto="0 0 0 0.000222 0.0111 -0.00108"/>
+                      <site name="claw_T3_left" class="adhesion-collision" size="0.00209" fromto="0 0 0 0.000244 0.0122 -0.00118"/>
                     </body>
                   </body>
                 </body>
@@ -718,7 +718,7 @@
                       <joint name="tarsus5_T3_right" class="extend_tarsus"/>
                       <geom name="tarsal_claw_T3_right" material="brown" pos="0.00845 0.17 0.111" quat="-0.252 0.823 -0.49 -0.136" mesh="tarsal_claw_T3_right_brown"/>
                       <geom name="tarsal_claw_T3_right_collision" class="adhesion-collision" type="capsule" size="0.0019" fromto="0 0 0 4.3e-05 -0.011 0.00125"/>
-                      <site name="claw_T3_right" class="adhesion-collision" size="0.00209" fromto="0 0 0 4.3e-05 -0.011 0.00125"/>
+                      <site name="claw_T3_right" class="adhesion-collision" size="0.00209" fromto="0 0 0 4.73e-05 -0.0121 0.00138"/>
                     </body>
                   </body>
                 </body>

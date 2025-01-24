@@ -397,6 +397,8 @@ class FruitFly(legacy_base.Walker):
                     j = f'walker/wing_{dof}_{s}'
                     physics.named.data.qpos[
                         j] = physics.named.model.qpos_spring[j]
+        # Set previous action to zero.
+        self._prev_action = np.zeros_like(self._prev_action)
 
     # -------------------------------------------------------------------------
 
