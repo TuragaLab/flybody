@@ -1,6 +1,7 @@
 # `flybody`: fruit fly body model for MuJoCo physics
 
-[![preprint](https://img.shields.io/badge/preprint-bioRxiv-B31B1B)][paper]
+
+[![nature](https://img.shields.io/badge/publication-8A2BE2)][paper]
 
 <img src="fly-white.png" width="65%">
 
@@ -54,7 +55,8 @@ To train the fly, try the [distributed RL training script][ray-script], which us
 [dmpo]: https://github.com/google-deepmind/acme/tree/master/acme/agents/tf/dmpo
 [envs]: https://github.com/TuragaLab/flybody/blob/main/docs/fly-env-examples.ipynb
 [ray-script]: https://github.com/TuragaLab/flybody/blob/main/flybody/train_dmpo_ray.py
-[paper]: https://www.biorxiv.org/content/10.1101/2024.03.11.584515v2
+[paper]: https://www.nature.com/articles/s41586-025-09029-4
+[preprint]: https://www.biorxiv.org/content/10.1101/2024.03.11.584515v2
 [ray]: https://github.com/ray-project/ray
 [tf]: https://github.com/tensorflow/tensorflow
 [acme]: https://github.com/google-deepmind/acme
@@ -132,15 +134,14 @@ Follow these steps to install `flybody`:
 See our accompanying [publication][paper]. Thank you for your interest in our fly model:)
 ```bibtex
 @article{flybody,
-  title = {Whole-body simulation of realistic fruit fly locomotion with
-           deep reinforcement learning},
+  title = {Whole-body physics simulation of fruit fly locomotion},
   author = {Roman Vaxenburg and Igor Siwanowicz and Josh Merel and Alice A Robie and
             Carmen Morrow and Guido Novati and Zinovia Stefanidi and Gert-Jan Both and
             Gwyneth M Card and Michael B Reiser and Matthew M Botvinick and
             Kristin M Branson and Yuval Tassa and Srinivas C Turaga},
-  journal = {bioRxiv},
-  doi = {https://doi.org/10.1101/2024.03.11.584515},
-  url = {https://www.biorxiv.org/content/10.1101/2024.03.11.584515},
-  year = {2024},
+  journal = {Nature},
+  doi = {https://doi.org/10.1038/s41586-025-09029-4},
+  url = {https://www.nature.com/articles/s41586-025-09029-4},
+  year = {2025},
 }
 ```
