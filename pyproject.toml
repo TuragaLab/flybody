@@ -38,6 +38,7 @@ tf = [
     "tensorflow==2.8.0",
     "tensorflow-probability==0.16.0",
     "dm-reverb==0.7.0",
+    "protobuf==3.20.*",
 ]
 ray = [
     "flybody[tf]",
