@@ -2,6 +2,7 @@
 
 
 [![nature](https://img.shields.io/badge/publication-8A2BE2)][paper]
+[![preprint](https://img.shields.io/badge/preprint-bioRxiv-B31B1B)][preprint]
 
 <img src="fly-white.png" width="65%">
 
