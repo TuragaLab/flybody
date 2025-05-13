@@ -17,7 +17,7 @@ def get_dquat_local(quat1, quat2):
     return mult_quat(reciprocal_quat(quat1), quat2)
 
 
-def get_quat(theta=0, rot_axis=[0., 0, 1]):
+def get_quat(theta=0, rot_axis=None):
     """Unit quaternion for given angle and rotation axis.
     
     Args:
@@ -27,6 +27,8 @@ def get_quat(theta=0, rot_axis=[0., 0, 1]):
     Returns:
         Rotation unit quaternion, (4,).
     """
+    if rot_axis is None:
+        rot_axis = [0., 0, 1]
     axis = rot_axis / np.linalg.norm(rot_axis)
     c = np.cos(theta / 2)
     s = np.sin(theta / 2)
@@ -59,6 +61,10 @@ def mult_quat(quat1: np.ndarray, quat2: np.ndarray) -> np.ndarray:
     Returns:
         Product of quat1*quat2, array of shape (B, 4) or (4,).
     """
+    if not isinstance(quat1, np.ndarray):
+        quat1 = np.array(quat1)
+    if not isinstance(quat2, np.ndarray):
+        quat2 = np.array(quat2)
     a1, b1, c1, d1 = quat1[..., 0], quat1[..., 1], quat1[..., 2], quat1[..., 3]
     a2, b2, c2, d2 = quat2[..., 0], quat2[..., 1], quat2[..., 2], quat2[..., 3]
     prod = np.empty_like(quat1) if quat1.ndim > quat2.ndim else np.empty_like(
@@ -81,6 +87,8 @@ def conj_quat(quat: np.ndarray) -> np.ndarray:
     Returns:
         Conjugate quaternion(s), array of shape (B, 4).
     """
+    if not isinstance(quat, np.ndarray):
+        quat = np.array(quat)
     quat = quat.copy()
     quat[..., 1:] *= -1
     return quat
