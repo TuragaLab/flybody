@@ -5,7 +5,7 @@ import ray
 
 
 class RemoteAsLocal():
-    """This wrappers allows calling methods of remote Ray actors (e.g. classes
+    """This wrapper allows calling methods of remote Ray actors (e.g. classes
     decorated with @ray.remote) as if they were local. It can be used to wrap
     classes from external libraries to simplify their integration with Ray.
 
