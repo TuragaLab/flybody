@@ -47,6 +47,7 @@ class FruitFlyTask(composer.Task, ABC):
         future_steps: int = 0,
         initialize_qvel: bool = False,
         observables_options: dict | None = None,
+        walker_xml_path: str | None = None,
     ):
         """Construct a fruitfly task.
 
@@ -84,6 +85,7 @@ class FruitFlyTask(composer.Task, ABC):
             observables_options (optional): A dict of dicts of configuration options
                 keyed on observable names, or a dict of configuration options, which
                 will propagate those options to all observables.
+            walker_xml_path: Optional alternative XML file to use for the fruitfly.
         """
         self._time_limit = time_limit
         self._initialize_qvel = initialize_qvel
@@ -106,6 +108,7 @@ class FruitFlyTask(composer.Task, ABC):
 
         # Instantiate a fruitfly walker.
         self._walker = walker(name='walker',
+                              xml_path=walker_xml_path,
                               use_legs=use_legs,
                               use_wings=use_wings,
                               use_mouth=use_mouth,
