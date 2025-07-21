@@ -123,6 +123,7 @@ class FruitFly(legacy_base.Walker):
     def _build(
         self,
         name: str = 'walker',
+        xml_path: str | None = None,
         use_legs: bool = True,
         use_wings: bool = False,
         use_mouth: bool = False,
@@ -143,6 +144,7 @@ class FruitFly(legacy_base.Walker):
 
         Args:
             name: Name of the walker.
+            xml_path: Path to the fruitfly XML file. Defaults to assets/fruitfly.xml.
             use_legs: Whether to use or retract the legs.
             use_wings: Whether to use or retract the wings.
             use_mouth: Whether to use or retract the mouth.
@@ -169,12 +171,14 @@ class FruitFly(legacy_base.Walker):
             eye_camera_size: Size in pixels (height and width) of the eye cameras.
                 Height and width are assumed equal.
         """
+        if xml_path is None:
+            xml_path = _XML_PATH
         self._use_wings = use_wings
         self._adhesion_filter = adhesion_filter
         self._control_timestep = control_timestep
         self._buffer_size = int(round(control_timestep / physics_timestep))
         self._eye_camera_size = eye_camera_size
-        root = mjcf.from_path(_XML_PATH)
+        root = mjcf.from_path(xml_path)
         self._mjcf_root = root
         if name:
             self._mjcf_root.model = name
