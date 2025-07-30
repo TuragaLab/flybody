@@ -141,8 +141,10 @@ See our accompanying [publication][paper]. Thank you for your interest in our fl
             Gwyneth M Card and Michael B Reiser and Matthew M Botvinick and
             Kristin M Branson and Yuval Tassa and Srinivas C Turaga},
   journal = {Nature},
+  volume = {643},
+  pages = {1312--1320},
+  year = {2025},
   doi = {https://doi.org/10.1038/s41586-025-09029-4},
   url = {https://www.nature.com/articles/s41586-025-09029-4},
-  year = {2025},
 }
 ```
