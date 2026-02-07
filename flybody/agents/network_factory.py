@@ -1,4 +1,4 @@
-"""Network factories for distributed D4PG and DMPO agents."""
+"""Network factories for distributed D4PG, DMPO, and PPO agents."""
 
 from typing import Optional, Callable
 
@@ -128,6 +128,69 @@ def make_network_factory_dmpo(policy_layer_sizes=(256, 256, 256),
                                     vmin=vmin,
                                     vmax=vmax,
                                     num_atoms=num_atoms,
+                                    min_scale=min_scale,
+                                    tanh_mean=tanh_mean,
+                                    init_scale=init_scale,
+                                    fixed_scale=fixed_scale,
+                                    use_tfd_independent=use_tfd_independent)
+
+    return network_factory
+
+
+def network_factory_ppo(
+    action_spec,
+    policy_layer_sizes=(256, 256, 256),
+    value_layer_sizes=(256, 256, 256),
+    min_scale=1e-6,
+    tanh_mean=False,
+    init_scale=0.7,
+    fixed_scale=False,
+    use_tfd_independent=True,
+):
+    """Networks for PPO agent."""
+    action_size = np.prod(action_spec.shape, dtype=int)
+
+    policy_network = snt.Sequential([
+        tf2_utils.batch_concat,
+        networks.LayerNormMLP(layer_sizes=policy_layer_sizes,
+                              activate_final=True),
+        networks.MultivariateNormalDiagHead(
+            action_size,
+            min_scale=min_scale,
+            tanh_mean=tanh_mean,
+            init_scale=init_scale,
+            fixed_scale=fixed_scale,
+            use_tfd_independent=use_tfd_independent)
+    ])
+
+    # Value network: state-only, scalar output (no action input).
+    value_network = snt.Sequential([
+        tf2_utils.batch_concat,
+        networks.LayerNormMLP(layer_sizes=value_layer_sizes,
+                              activate_final=True),
+        snt.Linear(1),
+    ])
+
+    return {
+        'policy': policy_network,
+        'value': value_network,
+        'observation': tf2_utils.batch_concat,
+    }
+
+
+def make_network_factory_ppo(policy_layer_sizes=(256, 256, 256),
+                              value_layer_sizes=(256, 256, 256),
+                              min_scale=1e-6,
+                              tanh_mean=False,
+                              init_scale=0.7,
+                              fixed_scale=False,
+                              use_tfd_independent=True):
+    """Returns network factory for distributed PPO agent."""
+
+    def network_factory(action_spec):
+        return network_factory_ppo(action_spec,
+                                    policy_layer_sizes=policy_layer_sizes,
+                                    value_layer_sizes=value_layer_sizes,
                                     min_scale=min_scale,
                                     tanh_mean=tanh_mean,
                                     init_scale=init_scale,
